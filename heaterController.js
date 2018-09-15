@@ -105,7 +105,7 @@ var heaterController = (function () {
       if (sensorsAvailable1) {  // No sensor reports have come in yet.  
         console.log('heaterController: Sensors available for heater 1.  Calculating PID correction value.');
         let sensorTemp = targetSensor1.units==='F'?fToC(parseFloat(targetSensor1.value)):parseInt(targetSensor1.value);
-        heater1correction = pids[0].calculate(parseInt(sensorTemp));  // Calculate the PID correction value.    
+        heater1correction = pids[0].calculate(parseFloat(sensorTemp));  // Calculate the PID correction value.    
         console.log('heaterController: Heater 1 PID correction value = ', heater1correction);
   // ***********  Comment the following line out for production!
         // heater1correction = 60;  // Used for testing in development.  
@@ -121,7 +121,10 @@ var heaterController = (function () {
         setHeaterState(1, false);     
       }
       else {
-        if (limitSensor1.value > global.configProxy.heaters[0].pidParameters.limitValue) {   //  If limit exceeded.  
+        currLimitSensorValue1 = limitSensor1.units==='C'?cToF(limitSensor1.value):parseFloat(limitSensor1.value);
+        LimitValue1 = parseFloat(global.configProxy.heaters[0].pidParameters.limitValue);
+        console.log('Lim sensor 1: ', currLimitSensorValue1, ', type: ', typeof(currLimitSensorValue1), ', limit 1: ', LimitValue1, ', type: ', typeof(LimitValue1));
+        if (currLimitSensorValue1 > LimitValue1) {   //  If limit exceeded.  
           console.log('heaterController: Heater 1 limit (', global.configProxy.heaters[0].pidParameters.limitValue, ') exceeded (', limitSensor1.units==='C'?cToF(limitSensor1.value):limitSensor1.value, ').  Turning off heater.');
           // turn off heaters, update current value
           setHeaterState(1, false);     
@@ -130,7 +133,7 @@ var heaterController = (function () {
           let displayTemp = (targetSensor1.units==='C'?cToF(parseFloat(targetSensor1.value)):parseInt(targetSensor1.value)).toFixed(1);
           uiController.updateHeaterCurrentTemp(1, displayTemp);
         } else { // Sensors available and limit not exceeded
-          console.log('heaterController: Sensors for heater 1 available.  Proceeding.');
+          console.log('heaterController: Sensors for heater 1 available and limit not exceeded(Limit = ', LimitValue1, ', current limit temp = ', currLimitSensorValue1, ').  Proceeding.');
           if (heater1correction < 100) {  // PID update value is NOT 100
             console.log('heaterController: PID calculated for heater 1 and less than 100%.  Turning heater 1 off and scheduling function to turn it on.');
             setHeaterState(1, false);     // Turn heater 1 off
@@ -209,7 +212,7 @@ var heaterController = (function () {
         if (sensorsAvailable2) {  // No sensor reports have come in yet.  
           console.log('heaterController: Sensors available for heater 2.  Calculating PID correction value.');
           let sensorTemp = targetSensor2.units==='F'?fToC(parseFloat(targetSensor2.value)):parseInt(targetSensor2.value);
-          heater2correction = pids[1].calculate(parseInt(sensorTemp));  // Calculate the PID correction value.    
+          heater2correction = pids[1].calculate(parseFloat(sensorTemp));  // Calculate the PID correction value.    
           console.log('heaterController: Heater 2 PID correction value = ', heater2correction);
   // ***********  Comment the following line out for production!
           // heater2correction = 33;  // Used for testing in development.  
@@ -225,8 +228,11 @@ var heaterController = (function () {
           setHeaterState(2, false);     
         }
         else {
-          if (limitSensor2.value > global.configProxy.heaters[1].pidParameters.limitValue) {   //  If limit exceeded.  
-            console.log('heaterController: Heater 2 limit (', global.configProxy.heaters[1].pidParameters.limitValue, ') exceeded (', limitSensor2.units==='C'?cToF(limitSensor2.value):limitSensor2.value, ').  Turning off heater.');
+          currLimitSensorValue2 = limitSensor2.units==='C'?cToF(limitSensor2.value):parseFloat(limitSensor2.value);
+          LimitValue2 = parseFloat(global.configProxy.heaters[1].pidParameters.limitValue);
+          console.log('Lim sensor 2: ', currLimitSensorValue2, ', type: ', typeof(currLimitSensorValue2), ', limit 2: ', LimitValue2, ', type: ', typeof(LimitValue2));
+          if (currLimitSensorValue2 > LimitValue2) {   //  If limit exceeded.  
+              console.log('heaterController: Heater 2 limit (', global.configProxy.heaters[1].pidParameters.limitValue, ') exceeded (', limitSensor2.units==='C'?cToF(limitSensor2.value):limitSensor2.value, ').  Turning off heater.');
             // turn off heaters, update current value
             setHeaterState(2, false);     
             uiController.setHeaterIndicator( 2, 'off');  //  Turn indicator off
@@ -234,7 +240,7 @@ var heaterController = (function () {
             let displayTemp = (targetSensor2.units==='C'?cToF(parseFloat(targetSensor2.value)):parseInt(targetSensor2.value)).toFixed(1);
             uiController.updateHeaterCurrentTemp(2, displayTemp);
           } else { // Sensors available and limit not exceeded
-            console.log('heaterController: Sensors for heater 2 available.  Proceeding.');
+            console.log('heaterController: Sensors for heater 2 available and limit not exceeded(Limit = ', LimitValue2, ', current limit temp = ', currLimitSensorValue2, ').  Proceeding.');
             if (heater2correction < 100) {  // PID update value is NOT 100
               console.log('heaterController: PID calculated for heater 2 and less than 100%.  Turning heater 2 on and scheduling function to turn it off.');
               setHeaterState(2, true);     // Turn heater 2 on
