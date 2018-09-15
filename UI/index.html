@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">        <link type="text/css" rel="stylesheet" href="style.css">
+        <title>Still Control</title>
+    </head>
+    <body>
+        <div class="outer-container">
+            <div class="grid top-container">
+                <div class="heading">
+                    Still Pi
+                </div>
+            </div>
+
+            <div class="heater-background"></div>
+            <div class="heater-container">
+                <!-- Heater labels -->
+                <div class="heater-label1-container">
+                    <input class="heater-label input-value" type="text" id="heater-label1" value="Heater 1">
+                </div>
+                <div class="heater-label2-container">
+                        <input class="heater-label input-value" type="text" id="heater-label2" value="Heater 2">
+                    </div>
+
+
+
+                <!-- START PID HEATER POWER CONTROL UI-->
+                <div class="grid heater" id="pid-heater1-container">
+                    <div class="heater-inner-container"></div>
+                    <div class="heater-current-container" id="heater-current-container1">
+                        Current: <br>
+                        <span class="heater-current-value" id="heater-current-value1">---</span> &deg;F
+                    </div>
+                    <div class="heater-target-container" id="heater-target-container1">
+                        Target: <br>
+                        <input class="heater-target-value input-value" type="text" id="heater-target-value1" value="180.0" min="0" max="220"> &deg;F
+                    </div>
+                    <select class="target-sensor-selector input-value" id="target-sensor-selector1">
+                            <option value="0" selected="selected">Select target sensor</option>
+                        </select>
+                    <div class="heater-limit-container" id="heater-limit-container1">
+                        Limit: <br>
+                        <input class="heater-limit-value input-value" type="text" id="heater-limit-value1" value="190.0" min="0" max="220"> &deg;F
+                    </div>
+                    <select class="limit-sensor-selector input-value" id="limit-sensor-selector1">
+                        <option value="0" selected="selected">Select limit sensor</option>
+                    </select>
+                </div>
+                <!-- HEATER 2 PID SECTION -->
+                <div class="grid heater" id="pid-heater2-container">
+                        <div class="heater-inner-container"></div>
+                        <div class="heater-current-container" id="heater-current-container2">
+                        Current: <br>
+                        <span class="heater-current-value" id="heater-current-value2">---</span> &deg;F
+                    </div>
+                    <div class="heater-target-container" id="heater-target-container2">
+                        Target: <br>
+                        <input class="heater-target-value input-value" type="text" id="heater-target-value2" value="185.0" min="0" max="220"> &deg;F
+                    </div>
+                    <select class="target-sensor-selector input-value" id="target-sensor-selector2">
+                        <option value="0" selected="selected">Select target sensor</option>
+                    </select>
+                    <div class="heater-limit-container" id="heater-limit-container2">
+                        Limit: <br>
+                        <input class="heater-limit-value input-value" type="text" id="heater-limit-value2" value="195.0" min="0" max="220"> &deg;F
+                    </div>
+                    <select class="limit-sensor-selector input-value" id="limit-sensor-selector2">
+                        <option value="0" selected="selected">Select limit sensor</option>
+                    </select>
+                </div>
+                <!-- END PID HEATER CONTROL UI -->
+
+                <!-- Constant power UI starts here -->
+                <div class="grid heater" id="power-heater1-container">
+                    <div class="heater-inner-container"></div>
+                    <div class="heater-power-container" id="heater-power-container1">
+                        Output Power: <br>
+                        <input class="heater-power-value input-value" type="text" id="heater-power-value1" value="100" min="0" max="100"> %
+                    </div>
+                </div>
+
+                <div class="grid heater" id="power-heater2-container">
+                    <div class="heater-inner-container"></div>
+                    <div class="heater-power-container" id="heater-power-container2">
+                        Output Power: <br>
+                        <input class="heater-power-value input-value" type="text" id="heater-power-value2" value="90" min="0" max="100"> %
+                    </div>
+                </div>
+                <!-- END CONSTANT POWER UI -->
+
+
+                <!-- START HEATER CONTROL MODE SWITCH CODE -->
+
+                <!-- Here's where this slider code comes from -->
+                <!-- https://www.htmllion.com/css3-toggle-switch-button.html -->
+                <div class="heater-mode-switch" id="heater-mode-switch-outer-container1">
+                    <label class="slider-switch">
+                        <input class="slider-switch-input mode-switch" id="heater-mode-switch1" type="checkbox"/>
+                        <span class="slider-switch-label" data-on="PID" data-off="Power"></span> 
+                        <span class="slider-switch-handle"></span>                 
+                    </label>
+                </div>
+        
+                <div class="heater-mode-switch" id="heater-mode-switch-outer-container2">
+                    <label class="slider-switch">
+                        <input class="slider-switch-input mode-switch" id="heater-mode-switch2" type="checkbox"/>
+                        <span class="slider-switch-label" data-on="PID" data-off="Power"></span> 
+                        <span class="slider-switch-handle"></span>                 
+                    </label>
+                </div>
+                <!-- END HEATER CONTROL MODE SWITCH CODE -->
+
+                <!-- START POWER SWITCHES SECTION -->
+                <div class="grid heater" id="power-switch-heater-1-container">
+                    <div class="heater-power-indicator" id="heater-power-indicator1"></div>
+                    <input type="checkbox" id="power-switch-heater-1" class="cb heater-1-2-cb  power-switch"/>
+                    <label for="power-switch-heater-1" class="lb heater-1-2-lb">
+                        <i class="fas fa-power-off pl"></i>
+                    </label>            
+                </div>
+                <div class="grid heater" id="power-switch-heater-2-container">
+                    <div class="heater-power-indicator" id="heater-power-indicator2"></div>
+                    <input type="checkbox" id="power-switch-heater-2" class="cb heater-1-2-cb power-switch"/>
+                    <label for="power-switch-heater-2" class="lb heater-1-2-lb">
+                        <i class="fas fa-power-off pl"></i>
+                    </label>            
+                </div>
+                <!-- END POWER SWITCHES SECTION -->            
+            </div>    
+
+
+            
+            <!-- START SENSOR UI  -->
+            <div class="grid sensor-outer-container" id="sensors">
+            </div>
+            <!-- END SENSOR UI  -->
+
+            <!-- START LOGGING UI -->
+            <div class="grid logging-container">
+                <div class="logging-left-container">
+                    Record: 
+                    <div class="logging-power" id="logging-switch-container">
+                        <input type="checkbox" id="logging-power" class="cb power-switch"/>
+                        <label for="logging-power" class="lb">
+                            <i class="fas fa-power-off pl"></i>
+                        </label>            
+                    </div>        
+                </div>
+                <div class="logging-right-container">
+                    <input class="logging-filename input-value" id="logging-filename" type="text" value="Filename">
+                    <select class="input-value" id="logging-interval-selector">
+                        <option value="0">Select logging interval</option>
+                        <option value="1">1 Second</option>
+                        <option value="5" selected="selected">5 Second</option>
+                        <option value="10">10 Second</option>
+                        <option value="30">30 Second</option>
+                        <option value="60">60 Second</option>
+                    </select>
+                </div>
+            </div>
+            <!-- END LOGGING UI -->
+        </div>
+    <script src="/jquery/dist/jquery.js"></script>
+    <script src="/socket.io/socket.io.js"></script>   
+    <script src="/script.js"></script>   
+    </body>             
+</html>

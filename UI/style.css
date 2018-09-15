@@ -1,0 +1,706 @@
+  body {
+    width: 100%;
+    height: 100%;
+    padding:0;
+    margin: 0px;
+    font-family: Arial, Helvetica, sans-serif;
+  }
+
+  .outer-container {
+    width: 100%;
+    height: 100%;
+    position:absolute;
+    display: grid;
+    grid-template-rows: 1fr 6fr 20fr 4fr 3fr;
+    grid-template-columns: 20px 29fr 20px 15fr;
+    grid-row-gap: 5px;
+    grid-column-gap: 5px;
+}
+
+.top-container {
+    grid-row: 1 / 2;
+    grid-column: 1 / 5;
+    margin: 10px;
+    color: white;
+    background: grey;
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
+.heading {
+    grid-row: 1 / 2;
+    grid-column: 1 / 5;
+    text-align: center;
+    font-size: 18pt;
+}
+
+.heater-container {    
+    grid-row: 3 / 5;
+    grid-column: 2 / 3;
+    display: grid;
+    grid-template-rows: 28pt 6fr 1fr;
+    grid-template-columns: 11fr 7fr 11fr;
+}
+
+.heater-background {
+    grid-row: 2 / 8;
+    grid-column: 1 / 4;
+    background: #3B67BC;
+}
+
+.heater {
+    display: grid;
+    grid-template-rows: 24pt 100pt 50pt 20pt 60pt 25pt;
+    grid-template-columns: 7fr 4fr;
+}
+
+.heater-label {
+    grid-row: 1 / 2;
+    grid-column: 1 / 2;
+    z-index: 1;
+
+    text-align: center;
+    font-size: 24pt;
+    font-weight: bold;
+    background: none;
+    border: none;
+}
+
+.heater-label1-container {
+    grid-row: 1 / 2;
+    grid-column: 1 / 2;
+    z-index: 1;
+
+    display: grid;
+    grid-template-rows: 24pt 100pt 50pt 20pt 60pt 25pt;
+    grid-template-columns: 7fr 4fr;
+}
+
+.heater-label2-container {
+    grid-row: 1 / 2;
+    grid-column: 3 / 4;
+    z-index: 1;
+
+    display: grid;
+    grid-template-rows: 24pt 100pt 50pt 20pt 60pt 25pt;
+    grid-template-columns: 7fr 4fr;
+}
+
+.heater-inner-container {
+    grid-row: 1 / 7;
+    grid-column: 1 / 3;
+    border-style: solid;
+    border-width: 1px;
+    border-color: black;
+    border-radius: 20px;
+    background-color: darkgrey;
+}
+
+.heater-current-container {
+    grid-row: 2 / 3;
+    grid-column: 1 / 3;
+    width: 80%;
+    height: 90px;
+    margin: auto;
+    /* margin-top: auto;
+    margin-bottom: 0;
+    margin-left: auto;
+    margin-right: auto; */
+    padding: 15px;
+    border-style: solid;
+    border-width: 1px;
+    border-color: red;
+    font-size: 18pt;
+    color: red;
+    background: lightgrey;
+}
+
+.heater-current-value {
+    font-size: 60pt;
+    font-weight: bold;
+}
+
+.heater-target-container {
+    grid-row: 3 / 4;
+    grid-column: 1 / 2;
+    width: 120px;
+    height: 50px;
+    margin-top: auto;
+    margin-bottom: 0;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 5px;
+    border-style: solid;
+    border-width: 1px;
+    border-color: green;
+    font-size: 12pt;
+    color: green;
+    background: lightgrey;
+}
+
+.heater-target-value {
+    border: none;
+    font-size: 24pt;
+    color: green;
+    width: 85px;
+    height: 18pt;
+    margin: auto auto;
+    background: none;
+}
+
+.heater-power-indicator {
+    height: 50px;
+    width: 50px;
+    margin: auto auto;
+    border-radius: 50%;
+    display: inline-block;  
+}
+
+#heater-power-indicator1 {
+    grid-row: 3 / 5;
+    grid-column: 2 / 3;
+    background-color: green;
+    border-color: lightgray;
+    z-index: 2;
+}
+
+#heater-power-indicator2 {
+    grid-row: 3 / 5;
+    grid-column: 2 / 3;
+    background-color: green;
+    border-color: lightgray;
+    z-index: 2;
+}
+
+.target-sensor-selector {
+    grid-row: 4 / 5;
+    grid-column: 1 / 2;
+    height: 20px;
+    width: 130px;
+    margin-top: 2px;
+    margin-bottom: auto;
+    margin-left: auto;
+    margin-right: auto;
+    background: lightgrey;
+}
+
+.heater-limit-container {
+    grid-row: 5 / 6;
+    grid-column: 1 / 2;
+    height: 40px;
+    width: 120px;
+    height: 50px;
+    margin-top: auto;
+    margin-bottom: 0;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 5px;
+    border-style: solid;
+    border-width: 1px;
+    border-color: green;
+    font-size: 12pt;
+    color: black;
+    background: lightgrey;
+}
+
+.heater-limit-value {
+    border: none;
+    font-size: 24pt;
+    color: black;
+    width: 85px;
+    height: 18pt;
+    margin: auto auto;
+    background: none;
+}
+.limit-sensor-selector {
+    grid-row: 6 / 7;
+    grid-column: 1 / 2;
+    height: 20px;
+    width: 130px;
+    margin-top: 2px;
+    margin-bottom: auto;
+    margin-left: auto;
+    margin-right: auto;
+    background: lightgrey;
+}
+
+
+/* START POWER SWITCH STYLING */
+
+#power-switch-heater-1-container {
+    grid-row: 2 / 3;
+    grid-column: 1 / 2;
+}
+#power-switch-heater-2-container {
+    grid-row: 2 / 3;
+    grid-column: 3 / 4;
+}
+.heater-1-2-cb {
+    grid-row: 5 / 7;
+    grid-column: 2 / 3;
+    z-index: 2;
+}
+.heater-1-2-lb {
+    grid-row: 5 / 7;
+    grid-column: 2 / 3;
+    z-index: 2;
+}
+#logging-switch-container {
+    z-index: 2;
+}
+.logging-power {
+    height: 175px;
+    width: 175px;
+    border: none;
+    cursor: pointer;
+    margin: auto;
+}
+
+.cb{
+    height: 75px;
+    width: 75px;
+    opacity: 0;
+    cursor: pointer;
+    border: none;
+    margin: auto;
+}
+.lb{
+    position: relative;
+    margin: auto;
+    width: 75px;
+    height: 75px;
+    border-radius: 50px;
+    cursor: pointer;
+    color: black;
+}
+.cb:checked ~ .lb{
+    color: green;
+}
+.pl{
+    position: relative;
+    font-size: 60pt;
+    margin: auto;
+}
+/* END POWER SWITCH STYLING */
+
+
+
+
+
+
+.heater-power {
+    grid-row: 5 / 7;
+    grid-column: 2 / 3;
+    /* background: url("images/power-green.svg");
+    background: url("images/power.svg"); */
+    border: black;
+    border-radius: 5px;
+    height: 75px;
+    width: 75px;
+    margin: auto auto;
+    cursor: pointer;
+} 
+
+
+
+#pid-heater-power1 {
+    grid-row: 5 / 7;
+    grid-column: 2 / 3;
+} 
+
+#pid-heater-power2 {
+    grid-row: 5 / 7;
+    grid-column: 2 / 3;
+} 
+
+#heater-power1 {
+    grid-row: 5 / 7;
+    grid-column: 2 / 3;
+} 
+
+#heater-power2 {
+    grid-row: 5 / 7;
+    grid-column: 2 / 3;
+} 
+
+/* Constant Power UI styling */
+.heater-power-container {
+    grid-row: 2 / 3;
+    grid-column: 1 / 3;
+    width: 80%;
+    height: 90px;
+    margin-top: auto;
+    margin-bottom: 0;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 15px;
+    border-style: solid;
+    border-width: 1px;
+    border-color: red;
+    font-size: 18pt;
+    color: red;
+    background: lightgrey;
+}
+
+#heater-label2{
+    grid-row: 1 / 2;
+    grid-column: 3 / 4;
+}
+
+.power-heater2-inner-container {
+    grid-row: 3 / 4;
+    grid-column: 3 / 4;
+    width: 120px;
+    height: 50px;
+    margin-top: auto;
+    margin-bottom: 0;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 5px;
+    border-style: solid;
+    border-width: 1px;
+    border-color: green;
+    font-size: 12pt;
+    color: green;
+    background: lightgrey;
+}
+
+.heater-power-value {
+    font-size: 60pt;
+    font-weight: bold;
+    border: none;
+    width: 100pt;
+    text-align: right;
+    color: red;
+    margin: auto auto;
+    background: none;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+
+
+
+    #pid-heater1-container {
+        grid-row: 2 / 3;
+        grid-column: 1 / 2;
+        z-index: 1;
+    }
+
+    #pid-heater2-container {
+        grid-row: 2 / 3;
+        grid-column: 3 / 4;
+        z-index: 1;
+    }
+
+    #power-heater1-container {
+        grid-row: 2 / 3;
+        grid-column: 1 / 2;
+        z-index: 1;
+    }
+    
+    #power-heater2-container {
+        grid-row: 2 / 3;
+        grid-column: 3 / 4;
+        z-index: 1;
+    }
+    
+/* END HEATER STYLING */
+
+
+    
+
+.sensor-outer-container {
+    grid-row: 2 / 4;
+    grid-column: 4 / 5;
+    background: #B5D1EB;
+    display: flex;
+    flex-direction: column;
+    overflow:scroll;
+}
+
+.sensor {
+    display: grid;
+    grid-template-rows: 1fr 1fr;
+    grid-template-columns: 1fr 8fr;
+    height: 60pt;
+    width: 95%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 5px;
+    margin-bottom: 0px;
+    background: lightgray;
+    border-style: solid;
+    border-width: 1px;
+    border-color: black;   
+}
+
+.sensor-left-container {
+    grid-row: 1 / 3;
+    grid-column: 1 / 2;
+    display: flex;
+    flex-direction: column;
+}
+
+.sensor-position-up-button {
+    grid-row: 1 / 2;
+    grid-column: 1 / 2;
+}
+.sensor-position-button-container {
+    height: 50%;
+    width: 100%;
+    margin-left: 25%;
+    margin-right: 25%;
+}
+.sensor-position-button {
+    height: 24pt;
+    width: 24pt;
+    position: absolute;
+    margin: auto;
+    margin-top: 5%;
+    border: none;
+    background-color: lightgray;
+    border-radius: 50%;
+}
+.sensor-position-button:hover {
+    background-color: darkgray; /* Green */
+    color: white;
+}
+.sensor-position-button-label {
+    position: absolute;
+    margin: auto;
+}
+.sensor-position-button-pl {
+    font-size: 30pt;
+    position: absolute;
+    text-align: center;
+    transform: translate(15%, -5%);
+}
+
+.sensor-position-down-button {
+    grid-row: 2 / 3;
+    grid-column: 1 / 2;
+    height: 24pt;
+    width: 24pt;
+    margin: auto;
+    margin-top: 5%;
+}
+
+
+
+
+.sensor-label {
+    grid-row: 1 / 2;
+    grid-column: 2 / 3;
+    font-size: 20pt;
+    color: black;
+    margin: auto;
+}
+
+.sensor-label-input {
+    background: lightgray;
+    color: black;
+    font-size: 20pt;
+    margin: auto;
+    border: none;
+}
+
+.sensor-value, 
+.sensor-value-div {
+    grid-row: 2 / 3;
+    grid-column: 2 / 3;
+    font-size: 24pt;
+    font-weight: bold;
+    margin: auto;
+}
+
+    #sensor-value1 {
+        color: red;
+    }
+
+    #sensor-value2 {
+        color: darkblue;
+    }
+
+    #sensor-value3 {
+        color: black;
+    }
+
+.logging-container {
+    grid-row: 4 / 8;
+    grid-column: 4 / 5;
+    background: #B5D1EB;
+    display: grid;
+    grid-template-rows: 2fr 1fr;
+    grid-template-columns: 1fr 3fr;
+}
+
+.logging-left-container {
+    grid-row: 1 / 3;
+    grid-column: 1 / 2;
+    display: flex;
+    flex-direction: column;
+    font-size: 18pt;
+    margin-top: 20px;
+    margin-bottom: auto;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.logging-right-container {
+    grid-row: 1 / 3;
+    grid-column: 2 / 3;
+    display: flex;
+    flex-direction: column;
+    font-size: 18pt;
+    margin-top: 15px;
+    margin-bottom: auto;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.logging-filename {
+    background: lightgray;
+    font-size: 18pt;
+    border: 2px solid darkgray;
+}
+
+#logging-interval-selector {
+    height: 20px;
+    width: 130px;
+    margin-top: 20px;
+    margin-bottom: auto;
+    margin-left: auto;
+    margin-right: auto;
+    background: lightgrey;
+}
+
+
+
+/* Start slider switch code  
+   The slider switch code comes from here:
+   https://www.htmllion.com/css3-toggle-switch-button.html
+   */
+.heater-mode-switch {
+    height: 80px;
+    margin: auto;
+}
+
+#heater-mode-switch-outer-container1 {
+    grid-row: 3 / 4;
+    grid-column: 1 / 2;
+}
+
+#heater-mode-switch-outer-container2 {
+    grid-row: 3 / 4;
+    grid-column: 3 / 4;
+}
+
+.slider-switch {
+    position: relative;
+    display: block;
+    /* vertical-align: top; */
+    width: 100px;
+    height: 30px;
+    padding: 3px;
+    /* margin: 0 10px 10px 0; */
+    background: linear-gradient(to bottom, #eeeeee, #FFFFFF 25px);
+    background-image: -webkit-linear-gradient(top, #eeeeee, #FFFFFF 25px);
+    border-radius: 18px;
+    box-shadow: inset 0 -1px white, inset 0 1px 1px rgba(0, 0, 0, 0.05);
+    cursor: pointer;
+    box-sizing:content-box;
+}
+.slider-switch-input {
+    position: absolute;
+    top: 0;
+    left: 0;
+    opacity: 0;
+    box-sizing:content-box;
+}
+.slider-switch-label {
+    position: relative;
+    display: block;
+    height: inherit;
+    font-size: 10px;
+    text-transform: uppercase;
+    background: darkkhaki;
+    border-radius: inherit;
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.12), inset 0 0 2px rgba(0, 0, 0, 0.15);
+    box-sizing:content-box;
+}
+.slider-switch-label:before, .slider-switch-label:after {
+    position: absolute;
+    top: 50%;
+    margin-top: -.5em;
+    line-height: 1;
+    -webkit-transition: inherit;
+    -moz-transition: inherit;
+    -o-transition: inherit;
+    transition: inherit;
+    box-sizing:content-box;
+}
+.slider-switch-label:before {
+    content: attr(data-off);
+    right: 18px;
+    color: black;
+    text-shadow: 0 1px rgba(255, 255, 255, 0.5);
+    font-size: 14px;
+}
+.slider-switch-label:after {
+    content: attr(data-on);
+    left: 20px;
+    color: black;
+    text-shadow: 0 1px rgba(0, 0, 0, 0.2);
+    opacity: 0;
+    font-size: 14px;
+}
+.slider-switch-input:checked ~ .slider-switch-label {
+    background: #E1B42B;
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.15), inset 0 0 3px rgba(0, 0, 0, 0.2);
+}
+.slider-switch-input:checked ~ .slider-switch-label:before {
+    opacity: 0;
+}
+.slider-switch-input:checked ~ .slider-switch-label:after {
+    opacity: 1;
+}
+.slider-switch-handle {
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    width: 28px;
+    height: 28px;
+    background: linear-gradient(to bottom, #FFFFFF 40%, #f0f0f0);
+    background-image: -webkit-linear-gradient(top, #FFFFFF 40%, #f0f0f0);
+    border-radius: 100%;
+    box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.2);
+}
+.slider-switch-handle:before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin: -6px 0 0 -6px;
+    width: 12px;
+    height: 12px;
+    background: linear-gradient(to bottom, #eeeeee, #FFFFFF);
+    background-image: -webkit-linear-gradient(top, #eeeeee, #FFFFFF);
+    border-radius: 6px;
+    box-shadow: inset 0 1px rgba(0, 0, 0, 0.02);
+}
+.slider-switch-input:checked ~ .slider-switch-handle {
+    left: 74px;
+    box-shadow: -1px 1px 5px rgba(0, 0, 0, 0.2);
+}
+
+/* Transition
+========================== */
+.slider-switch-label, .slider-switch-handle {
+    transition: All 0.3s ease;
+    -webkit-transition: All 0.3s ease;
+    -moz-transition: All 0.3s ease;
+    -o-transition: All 0.3s ease;
+}
+
+/* End slider switch */
+
