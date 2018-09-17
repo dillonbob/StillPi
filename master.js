@@ -1,5 +1,6 @@
 
 var sensorController = require('./sensorController.js');
+var localSensors = require('./localSensors.js');
 var heaterController = require('./heaterController.js');
 var uiController = require('./uiController.js');
 var loggingController = require('./loggingController.js');
@@ -40,11 +41,18 @@ var controller = (function (sensorCtrl, mqttCtrl) {
         });
 
         // Use mDNS to advertise this device so that slaves can find the MQTT broker.
-        var ad = mdns.createAdvertisement(mdns.tcp('mqtt'), 1883, {name: 'stillpi'}, function(error, service) {
-          console.log('mDNS advertise fired for service ');
+        var mqttAd = mdns.createAdvertisement(mdns.tcp('mqtt'), 1883, {name: 'stillpi'}, function(error, service) {
+          console.log('mDNS mqtt advertise fired for service ');
           // console.log('   Error message: ', error);
         });
-        ad.start();
+        mqttAd.start();
+
+        // Use mDNS to advertise this device so that slaves can find the MQTT broker.
+        var httpAd = mdns.createAdvertisement(mdns.tcp('http'), 1883, {name: 'stillpi'}, function(error, service) {
+          console.log('mDNS http advertise fired for service ');
+          // console.log('   Error message: ', error);
+        });
+        httpAd.start();
 
         // INITIALIZE INDIVIDUAL CONTROLLERS
         // Initialize the configuration controller.  
@@ -55,6 +63,8 @@ var controller = (function (sensorCtrl, mqttCtrl) {
         uiController.init();
         // Initialize the sensor controller.  
         sensorController.init();
+        // Initialize the local temperature sensor.  
+        localSensors.init();
         // Initialize the heater controller.  
         heaterController.init();
         // Initialize the logging controller.  

@@ -197,6 +197,10 @@ var sensorController = (function () {
 
         // Update the sensor temperature value in the session array.  
         sensors[index].label = newLabel;
+      },
+
+      publishMQTT: function (topic, message) {
+        mqttClient.publish(topic, message);
       }
     }
 })();
