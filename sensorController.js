@@ -58,7 +58,7 @@ var sensorController = (function () {
     var addSensor = function (message) {
         var tempSensor;
 
-        console.log('sensorController: Adding sensor: ', message);
+        // console.log('sensorController: Adding sensor: ', message);
 
         // Check if the sensor is in the persistent object.  Add it if not.  
         if ((tempSensor = isSensorInPersist(message.sensorid)) === undefined) {
@@ -79,7 +79,7 @@ var sensorController = (function () {
             sensors.push(message);
         };
 
-        console.log('sensorController: Session sensors: ', sensors);
+        // console.log('sensorController: Session sensors: ', sensors);
 
         uiController.renderSensors();
     };
@@ -115,7 +115,7 @@ var sensorController = (function () {
 
                 // Find the index of the reporting sensor in the session sensors array.  
                 var index = sensors.findIndex(sensor => sensor.sensorid === message.sensorid);
-                console.log('sensorController: Updating sensor: ', sensors[index]);
+                // console.log('sensorController: Updating sensor: ', sensors[index]);
 
                 // Update the sensor temperature value in the session array.  
                 sensors[index].value = message.value;
