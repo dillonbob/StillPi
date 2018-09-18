@@ -48,7 +48,7 @@ var controller = (function (sensorCtrl, mqttCtrl) {
         mqttAd.start();
 
         // Use mDNS to advertise this device so that slaves can find the MQTT broker.
-        var httpAd = mdns.createAdvertisement(mdns.tcp('http'), 1883, {name: 'stillpi'}, function(error, service) {
+        var httpAd = mdns.createAdvertisement(mdns.tcp('http'), 3000, {name: 'stillpi'}, function(error, service) {
           console.log('mDNS http advertise fired for service ');
           // console.log('   Error message: ', error);
         });
