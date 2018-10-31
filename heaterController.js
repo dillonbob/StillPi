@@ -65,7 +65,7 @@ var heaterController = (function () {
     var sensorControl = require('./sensorController.js');
 
     var sensor = sensorControl.getSensors().find((sensor) => {return sensor.sensorid === sensorID;});
-    // console.log('heaterController: Looking up sensor ', sensorID, ': ', sensor);
+    console.log('heaterController: Looking up sensor ', sensorID, ': ', sensor);
     return sensor;
   };
 

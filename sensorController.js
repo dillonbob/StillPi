@@ -106,7 +106,7 @@ var sensorController = (function () {
     // This method will look at the message type and dispatch it to the appropriate handler.  
     var mqttMessageHandler = function (topic, message) {
         message = JSON.parse(message.toString());
-        console.log( 'sensorController: mqttMessageHandler:topic: ', topic);
+        console.log( 'sensorController: MQTT server mqttMessageHandler:topic: ', topic);
 
         switch (topic) {
             case 'stillpi/sensors/report':
@@ -158,6 +158,9 @@ var sensorController = (function () {
 
             // Whenever a new MQTT slient connectes, ask all sensors to announce themselves.  
             announceInvoke();
+        });
+        server.on('published', function(packet, client) {
+          console.log('MQTT server message published');
         });
         
         //Setup the MQTT client that this sensor controller uses to receive sensor data from slaves.  

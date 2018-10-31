@@ -64,7 +64,7 @@ var controller = (function (sensorCtrl, mqttCtrl) {
         // Initialize the sensor controller.  
         sensorController.init();
         // Initialize the local temperature sensor.  
-        localSensors.init();
+//        localSensors.init();
         // Initialize the heater controller.  
         heaterController.init();
         // Initialize the logging controller.  
