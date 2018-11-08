@@ -1,3 +1,4 @@
+
 var socket = io.connect({'forceNew': true});
 
 // Startup Dragula for sensor dragging.  
@@ -107,25 +108,9 @@ socket.on('renderSensors', (parms) => {
         var newTemp = (sensor.units==='C'?cToF(parseFloat(sensor.value)):parseFloat(sensor.value)).toFixed(1);
         $('#sensors').append(
             '<div class="sensor">'
-                // + '<div class="sensor-label ' + sensor.deviceID + '">' 
-                +   '<input class="sensor-label-input input-value" type="text" id="' + sensor.sensorid + '" value="' + sensor.label + '">'
-                // + '</div>'
-                + '<div class="sensor-value-div"><span class="sensor-value sensor-value' + index + '" id="' + sensor.sensorid + '">' + newTemp + '</span> &deg;F</div>'
-                // + '<div class="sensor-left-container">'
-                // + '<div class="sensor-position-button-container">'
-                // + '        <input type="button" class="sensor-position-button sensor-position-up-button sensor-position-change-button" id="sensor-position-up-button-2"/>'
-                // + '        <label for="sensor-position-up-button-2"   class="sensor-position-button-label">'
-                // + '            <i class="fas fa-angle-up sensor-position-button-pl"></i>'
-                // + '        </label>'
-                // + '    </div>'
-                // + '    <div class="sensor-position-button-container">'
-                // + '        <input type="button" class="sensor-position-button sensor-position-down-button sensor-position-change-button" id="sensor-position-down-button-2"/>'
-                // + '        <label for="sensor-position-down-button-2"   class="sensor-position-button-label">'
-                // + '            <i class="fas fa-angle-down sensor-position-button-pl"></i>'
-                // + '        </label>   '
-                // + '    </div>'
-                // + '</div>'
-            // + '</div>'
+                + '<div class="sensor-value-div"><span class="sensor-value' + index + '" id="' + sensor.sensorid + '">' + newTemp + '</span> &deg;F:  '
+                +   '<input class="sensor-label-input input-value" type="text" id="' + sensor.sensorid + '" value="' + sensor.label + '"></div>'
+            + '</div>'
         );
         idSelector = '#sensor-value' + index;
         $(idSelector).css("color", "black");
@@ -222,4 +207,4 @@ socket.on('initParams', function(message) {
 
 socket.on('connect', function(data) {
     console.log('Connected to host.');
-});
+})
