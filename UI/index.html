@@ -1,8 +1,11 @@
+
 <!DOCTYPE html>
 <html lang="en">
     <head>
         <meta charset="UTF-8">
-        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">        <link type="text/css" rel="stylesheet" href="style.css">
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">        
+        <link type="text/css" rel="stylesheet" href="style.css">
+        <link type='text/css' rel='stylesheet' href='dragula.css' />
         <title>Still Control</title>
     </head>
     <body>
@@ -113,14 +116,14 @@
 
                 <!-- START POWER SWITCHES SECTION -->
                 <div class="grid heater" id="power-switch-heater-1-container">
-                    <div class="heater-power-indicator" id="heater-power-indicator1"></div>
+                    <!-- <div class="heater-power-indicator" id="heater-power-indicator1"></div> -->
                     <input type="checkbox" id="power-switch-heater-1" class="cb heater-1-2-cb  power-switch"/>
                     <label for="power-switch-heater-1" class="lb heater-1-2-lb">
                         <i class="fas fa-power-off pl"></i>
                     </label>            
                 </div>
                 <div class="grid heater" id="power-switch-heater-2-container">
-                    <div class="heater-power-indicator" id="heater-power-indicator2"></div>
+                    <!-- <div class="heater-power-indicator" id="heater-power-indicator2"></div> -->
                     <input type="checkbox" id="power-switch-heater-2" class="cb heater-1-2-cb power-switch"/>
                     <label for="power-switch-heater-2" class="lb heater-1-2-lb">
                         <i class="fas fa-power-off pl"></i>
@@ -161,8 +164,10 @@
             </div>
             <!-- END LOGGING UI -->
         </div>
-    <script src="/jquery/dist/jquery.js"></script>
-    <script src="/socket.io/socket.io.js"></script>   
-    <script src="/script.js"></script>   
+
+        <script src="/jquery/dist/jquery.js"></script>
+        <script src="/socket.io/socket.io.js"></script>   
+        <script src="/dragula/dist/dragula.js"></script>
+        <script src="/script.js"></script>   
     </body>             
 </html>

@@ -1,3 +1,4 @@
+
 var jsonfile = require('jsonfile');
 
 // START CONFIGURATION CONTROLLER
@@ -45,6 +46,8 @@ var jsonfile = require('jsonfile');
 // Values assigned here are the default values.  If a config file exists, these values are over-written with the file contents.
 global.config = {};
 
+var fileSaveInterval = 60;   // In seconds.  
+
 
 // Based on this example:
 //      https://botproxy.net/docs/how-to/how-to-use-javascript-proxy-for-nested-objects/
@@ -62,7 +65,7 @@ let configProxyHandler = {
         target[key] = value;
 
         // Save config to permanent storage
-        saveConfig();
+        // saveConfig();
 
         return true
     }
@@ -157,6 +160,11 @@ var configController = (function () {
                 // Save the default configuration.  
                 saveConfig();
             }
+
+            // Setup a periodic saving of the configuration.  
+            var intervalID = setInterval( function() {
+                saveConfig();
+            }, fileSaveInterval * 1000);
         },
     }
     module.exports = {configProxy};

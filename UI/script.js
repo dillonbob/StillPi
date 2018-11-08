@@ -1,5 +1,9 @@
 var socket = io.connect({'forceNew': true});
 
+// Startup Dragula for sensor dragging.  
+dragula([document.getElementById('sensors')]);
+
+
 // This function fires when any of the input fields are changed.  
 // The id of the element is used to identify to the host node application which field changed.
 $('.input-value').change(function() {
@@ -67,7 +71,7 @@ socket.on('setParam', (data) => {
 });
 
 
-//  This function is fired when a sensor label is changed.  The "onchange" is embedded in teh input tag when the sensor is added by the renderSensors function below.  
+//  This function is fired when a sensor label is changed.  The "onchange" is embedded in the input tag when the sensor is added by the renderSensors function below.  
 // var sensorLabelHandler = function(arg) {
 $('#sensors').on('change', '.sensor-label-input', function() {   
     console.log('ID of changing sensor: ', this.id);
@@ -107,21 +111,21 @@ socket.on('renderSensors', (parms) => {
                 +   '<input class="sensor-label-input input-value" type="text" id="' + sensor.sensorid + '" value="' + sensor.label + '">'
                 // + '</div>'
                 + '<div class="sensor-value-div"><span class="sensor-value sensor-value' + index + '" id="' + sensor.sensorid + '">' + newTemp + '</span> &deg;F</div>'
-                + '<div class="sensor-left-container">'
-                + '<div class="sensor-position-button-container">'
-                + '        <input type="button" class="sensor-position-button sensor-position-up-button sensor-position-change-button" id="sensor-position-up-button-2"/>'
-                + '        <label for="sensor-position-up-button-2"   class="sensor-position-button-label">'
-                + '            <i class="fas fa-angle-up sensor-position-button-pl"></i>'
-                + '        </label>'
-                + '    </div>'
-                + '    <div class="sensor-position-button-container">'
-                + '        <input type="button" class="sensor-position-button sensor-position-down-button sensor-position-change-button" id="sensor-position-down-button-2"/>'
-                + '        <label for="sensor-position-down-button-2"   class="sensor-position-button-label">'
-                + '            <i class="fas fa-angle-down sensor-position-button-pl"></i>'
-                + '        </label>   '
-                + '    </div>'
-                + '</div>'
-            + '</div>'
+                // + '<div class="sensor-left-container">'
+                // + '<div class="sensor-position-button-container">'
+                // + '        <input type="button" class="sensor-position-button sensor-position-up-button sensor-position-change-button" id="sensor-position-up-button-2"/>'
+                // + '        <label for="sensor-position-up-button-2"   class="sensor-position-button-label">'
+                // + '            <i class="fas fa-angle-up sensor-position-button-pl"></i>'
+                // + '        </label>'
+                // + '    </div>'
+                // + '    <div class="sensor-position-button-container">'
+                // + '        <input type="button" class="sensor-position-button sensor-position-down-button sensor-position-change-button" id="sensor-position-down-button-2"/>'
+                // + '        <label for="sensor-position-down-button-2"   class="sensor-position-button-label">'
+                // + '            <i class="fas fa-angle-down sensor-position-button-pl"></i>'
+                // + '        </label>   '
+                // + '    </div>'
+                // + '</div>'
+            // + '</div>'
         );
         idSelector = '#sensor-value' + index;
         $(idSelector).css("color", "black");
