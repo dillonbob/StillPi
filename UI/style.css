@@ -1,7 +1,6 @@
-
   body {
-    width: 100%;
-    height: 100%;
+    width: 90%;
+    height: 90%;
     padding:0;
     margin: 0px;
     font-family: Arial, Helvetica, sans-serif;
@@ -41,12 +40,14 @@
     display: grid;
     grid-template-rows: 28pt 6fr 1fr;
     grid-template-columns: 11fr 7fr 11fr;
+    z-index: 9;
 }
 
 .heater-background {
     grid-row: 2 / 8;
     grid-column: 1 / 4;
     background: #3B67BC;
+    z-index: 8;
 }
 
 .heater {
@@ -384,49 +385,176 @@
     #pid-heater1-container {
         grid-row: 2 / 3;
         grid-column: 1 / 2;
-        z-index: 1;
+        z-index: 10;
     }
 
     #pid-heater2-container {
         grid-row: 2 / 3;
         grid-column: 3 / 4;
-        z-index: 1;
+        z-index: 10;
     }
 
     #power-heater1-container {
         grid-row: 2 / 3;
         grid-column: 1 / 2;
-        z-index: 1;
+        z-index: 10;
     }
     
     #power-heater2-container {
         grid-row: 2 / 3;
         grid-column: 3 / 4;
-        z-index: 1;
+        z-index: 10;
     }
     
 /* END HEATER STYLING */
 
 
-    
 
-.sensor-outer-container {
+.sensor-outer-outer-container {
     grid-row: 2 / 4;
     grid-column: 4 / 5;
     background: #B5D1EB;
+    /* display: flex;
+    flex-direction: row; */
+    /* overflow:scroll; */
+    z-index: 1;
+}
+
+.sensor-outer-container, 
+.sidebar{
+    grid-row: 2 / 4;
+    grid-column: 4 / 5;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    /* top: 0;
+    left: 0; */
+}
+
+.sensor-outer-container {
+    /* position: absolute;
+    width: 100%;
+    height: 100%; */
+    background: #B5D1EB;
     display: flex;
     flex-direction: column;
-    overflow:scroll;
+    /* overflow:scroll; */
+    z-index: 2;
 }
+
+/* Start sensor config side menu styling */
+/* https://codepen.io/kanchala-k/pen/MoJOMJ */
+
+.sidebar{
+    /* position: absolute;
+    top: 0; */
+    left:-85%;
+    background-color: #FFFFFF;
+    opacity: 60%;
+    /* width: 250px; */
+    width: 85%;
+    height: 100%;
+    transition: .3s;
+    z-index: 3;
+}
+  
+ul{
+    margin: 0;
+    padding: 20px 0;
+}
+  
+ul li{
+    list-style: none;
+}
+  
+ul li a{
+    padding: 10px 20px;
+    color: #fff;
+    display: block;
+    text-decoration: none;
+}
+  
+ul li a:hover{
+    background-color: grey;
+}
+  
+.sidebarBtn{
+    position: absolute;
+    bottom: 0;
+    right:-50px;
+    width:50px;
+    height:50px;
+    box-sizing:border-box;
+    cursor: pointer;
+    background-color: #f5f5f5;
+    border: none;
+    outline: none;
+}
+  
+.sidebarBtn span{
+    display: block;
+    width: 35px;
+    height: 3px;
+    background-color: #262626;
+    position: absolute;
+    top:24px;
+    transition: .3s;
+}
+  
+.sidebarBtn span:before{
+    content: '';
+    width: 100%;
+    height: 3px;
+    background-color: #262626;
+    position: absolute;
+    top: -10px;
+    left: 0;
+    transition: .3s;
+}
+  
+.sidebarBtn span:after{
+    content: '';
+    width: 100%;
+    height: 3px;
+    background-color: #262626;
+    position: absolute;
+    top: 10px;
+    left: 0;
+    transition: .3s;
+}
+  
+.active{
+    left: 0;
+    opacity: 0.9;
+    background-color: #262626;
+    /* width: 75%; */
+}
+  
+.sidebarBtn.toggle span{
+    background-color: transparent;
+}
+  
+.sidebarBtn.toggle span:before{
+    top:0;
+    transform: rotate(-45deg);
+}
+  
+.sidebarBtn.toggle span:after{
+    top:0;
+    transform: rotate(45deg);
+}
+
+/* End sensor config side menu styling */
+
 
 .sensor {
     /* display: grid;
     grid-template-rows: 1fr 1fr;
     grid-template-columns: 1fr 8fr; */
     height: 30pt;
-    width: 95%;
-    margin-left: auto;
-    margin-right: auto;
+    width: 90%;
+    margin-left: 10px;
+    margin-right: 10px;
     margin-top: 5px;
     margin-bottom: 0px;
     background: lightgray;
@@ -434,60 +562,6 @@
     border-width: 1px;
     border-color: black;   
 }
-
-.sensor-left-container {
-    grid-row: 1 / 3;
-    grid-column: 1 / 2;
-    display: flex;
-    flex-direction: column;
-}
-
-.sensor-position-up-button {
-    grid-row: 1 / 2;
-    grid-column: 1 / 2;
-}
-.sensor-position-button-container {
-    height: 50%;
-    width: 100%;
-    margin-left: 25%;
-    margin-right: 25%;
-}
-.sensor-position-button {
-    height: 24pt;
-    width: 24pt;
-    position: absolute;
-    margin: auto;
-    margin-top: 5%;
-    border: none;
-    background-color: lightgray;
-    border-radius: 50%;
-}
-.sensor-position-button:hover {
-    background-color: darkgray; /* Green */
-    color: white;
-}
-.sensor-position-button-label {
-    position: absolute;
-    margin: auto;
-}
-.sensor-position-button-pl {
-    font-size: 30pt;
-    position: absolute;
-    text-align: center;
-    transform: translate(15%, -5%);
-}
-
-.sensor-position-down-button {
-    grid-row: 2 / 3;
-    grid-column: 1 / 2;
-    height: 24pt;
-    width: 24pt;
-    margin: auto;
-    margin-top: 5%;
-}
-
-
-
 
 .sensor-label {
     grid-row: 1 / 2;

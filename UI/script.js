@@ -1,8 +1,18 @@
-
 var socket = io.connect({'forceNew': true});
 
 // Startup Dragula for sensor dragging.  
-dragula([document.getElementById('sensors')]);
+dragula([document.getElementById('sensors')])
+.on("drop", function(el, target, source, sibling) {
+    console.log("Dragula: element moved.", el, target, source, sibling);
+});
+
+// Sensor side menu code 
+// https://codepen.io/kanchala-k/pen/MoJOMJ
+$('.sidebarBtn').click(function(){
+    $('.sidebar').toggleClass('active');
+    $('.sidebarBtn').toggleClass('toggle');
+});
+
 
 
 // This function fires when any of the input fields are changed.  
@@ -92,7 +102,7 @@ socket.on('renderSensors', (parms) => {
     // console.log('Render sensors: ', parms);
     console.log('Render sensors: ');
     // Throw away the current sensor elements
-    $('#sensors').children().remove();
+    $('#sensors').find('.sensor').remove();
 
     // Remove all sensor options from the sensor selectors.
     $('#target-sensor-selector1').empty();
@@ -207,4 +217,4 @@ socket.on('initParams', function(message) {
 
 socket.on('connect', function(data) {
     console.log('Connected to host.');
-})
+});
