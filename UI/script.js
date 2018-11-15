@@ -126,13 +126,13 @@ socket.on('renderSensors', (parms) => {
                     +   '<input class="sensor-label-input input-value" type="text" id="' + sensor.sensorid + '" value="' + sensor.label + '"></nobr></div>'
                 + '</div>'
             );
-            //  Temporarily add new sensor to watched sensor container too.  
-            $('.sensor-outer-container').append(
-                '<div class="sensor">'
-                    + '<div class="sensor-value-div"><span class="sensor-value' + '" id="' + sensor.sensorid + '">' + newTemp + '</span> &deg;F:  '
-                    +   '<input class="sensor-label-input input-value" type="text" id="' + sensor.sensorid + '" value="' + sensor.label + '"></div>'
-                + '</div>'
-            );
+            // //  Temporarily add new sensor to watched sensor container too.  
+            // $('.sensor-outer-container').append(
+            //     '<div class="sensor">'
+            //         + '<div class="sensor-value-div"><nobr><span class="sensor-value' + '" id="' + sensor.sensorid + '">' + newTemp + '</span> &deg;F:  '
+            //         +   '<input class="sensor-label-input input-value" type="text" id="' + sensor.sensorid + '" value="' + sensor.label + '"></nobr></div>'
+            //     + '</div>'
+            // );
             idSelector = '#sensor-value' + index;
             $(idSelector).css("color", "black");
 
