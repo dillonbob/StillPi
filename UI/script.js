@@ -1,3 +1,4 @@
+
 var socket = io.connect({'forceNew': true});
 
 // Startup Dragula for sensor dragging.  
@@ -102,46 +103,56 @@ socket.on('renderSensors', (parms) => {
     // console.log('Render sensors: ', parms);
     console.log('Render sensors: ');
     // Throw away the current sensor elements
-    $('#sensors').find('.sensor').remove();
+    // $('#sensors').find('.sensor').remove();
 
     // Remove all sensor options from the sensor selectors.
-    $('#target-sensor-selector1').empty();
-    $('#limit-sensor-selector1').empty();
-    $('#target-sensor-selector2').empty();
-    $('#limit-sensor-selector2').empty();
+    // $('#target-sensor-selector1').empty();
+    // $('#limit-sensor-selector1').empty();
+    // $('#target-sensor-selector2').empty();
+    // $('#limit-sensor-selector2').empty();
 
     console.log('renderSensors sensors array: ', parameters.sensors);
     console.log('renderSensors config: ', parameters.config);
     
+    // Add new sensor to list if it's not already there.  
     parameters.sensors.forEach( (sensor, index) => {
 
-        var newTemp = (sensor.units==='C'?cToF(parseFloat(sensor.value)):parseFloat(sensor.value)).toFixed(1);
-        $('#sensors').append(
-            '<div class="sensor">'
-                + '<div class="sensor-value-div"><span class="sensor-value' + index + '" id="' + sensor.sensorid + '">' + newTemp + '</span> &deg;F:  '
-                +   '<input class="sensor-label-input input-value" type="text" id="' + sensor.sensorid + '" value="' + sensor.label + '"></div>'
-            + '</div>'
-        );
-        idSelector = '#sensor-value' + index;
-        $(idSelector).css("color", "black");
+        console.log("Looking for " + sensor.sensorid + ":", $('.sidebar').find('#' + sensor.sensorid).length);
+        if ($('.sidebar').find('#' + sensor.sensorid).length === 0 ) {
+            var newTemp = (sensor.units==='C'?cToF(parseFloat(sensor.value)):parseFloat(sensor.value)).toFixed(1);
+            $('.sidebar').append(
+                '<div class="sensor">'
+                    + '<div class="sensor-value-div"><nobr><span class="sensor-value' + '" id="' + sensor.sensorid + '">' + newTemp + '</span> &deg;F:  '
+                    +   '<input class="sensor-label-input input-value" type="text" id="' + sensor.sensorid + '" value="' + sensor.label + '"></nobr></div>'
+                + '</div>'
+            );
+            //  Temporarily add new sensor to watched sensor container too.  
+            $('.sensor-outer-container').append(
+                '<div class="sensor">'
+                    + '<div class="sensor-value-div"><span class="sensor-value' + '" id="' + sensor.sensorid + '">' + newTemp + '</span> &deg;F:  '
+                    +   '<input class="sensor-label-input input-value" type="text" id="' + sensor.sensorid + '" value="' + sensor.label + '"></div>'
+                + '</div>'
+            );
+            idSelector = '#sensor-value' + index;
+            $(idSelector).css("color", "black");
 
-        //  Add the sensor to the selector pulldown lists (e.g. PID target sensor).  
-        $('#target-sensor-selector1').append($("<option></option>")
-        .attr("value",sensor.sensorid)
-        .text(sensor.label)); 
+            //  Add the sensor to the selector pulldown lists (e.g. PID target sensor).  
+            $('#target-sensor-selector1').append($("<option></option>")
+            .attr("value",sensor.sensorid)
+            .text(sensor.label)); 
 
-        $('#limit-sensor-selector1').append($("<option></option>")
-        .attr("value",sensor.sensorid)
-        .text(sensor.label)); 
+            $('#limit-sensor-selector1').append($("<option></option>")
+            .attr("value",sensor.sensorid)
+            .text(sensor.label)); 
 
-        $('#target-sensor-selector2').append($("<option></option>")
-        .attr("value",sensor.sensorid)
-        .text(sensor.label)); 
+            $('#target-sensor-selector2').append($("<option></option>")
+            .attr("value",sensor.sensorid)
+            .text(sensor.label)); 
 
-        $('#limit-sensor-selector2').append($("<option></option>")
-        .attr("value",sensor.sensorid)
-        .text(sensor.label)); 
-        
+            $('#limit-sensor-selector2').append($("<option></option>")
+            .attr("value",sensor.sensorid)
+            .text(sensor.label)); 
+        };
     });
 
     // Select the sensor in the sensor selectors if the sensor is present.  
