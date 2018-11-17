@@ -1,5 +1,3 @@
-
-
 // START HEATER CONTROLLER
 var heaterController = (function () {
 
@@ -124,7 +122,7 @@ var heaterController = (function () {
       // For heater 1, the interval starts with the heater on.  The delayed function turns it off.  
       if (!sensorsAvailable1) {
         // Turn off heater and blank current value
-        uiController.setHeaterIndicator( 1, 'off');  //  Turn indicator off
+        // uiController.setHeaterIndicator( 1, 'off');  //  Turn indicator off
         setHeaterState(1, false);     
       }
       else {
@@ -402,4 +400,4 @@ var heaterController = (function () {
 })();
 // END HEATER CONTROLLER
 
-module.exports = heaterController;
+module.exports = heaterController

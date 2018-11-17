@@ -1,4 +1,3 @@
-
 var socket = io.connect({'forceNew': true});
 
 // Startup Dragula for sensor dragging.  
@@ -64,15 +63,15 @@ $('.sensor-position-change-button').click( function() {
 socket.on('setParam', (data) => {
     console.log('Setting parameter ' + data.value + ' to ' + data.state);
     switch(data.value) {
-        case 'heater-power-indicator1':
-        case 'heater-power-indicator2':
-            if(data.state === 'on') {
-                $('#' + data.value).css('background-color', 'green');
-            }
-            else {
-                $('#' + data.value).css('background-color', 'black');
-            }
-            break;
+        // case 'heater-power-indicator1':
+        // case 'heater-power-indicator2':
+        //     if(data.state === 'on') {
+        //         $('#' + data.value).css('background-color', 'green');
+        //     }
+        //     else {
+        //         $('#' + data.value).css('background-color', 'black');
+        //     }
+        //     break;
 
         case 'heater-current-value1':
         case 'heater-current-value2':
@@ -95,6 +94,29 @@ var cToF = function (temp) {
     return (temp * (9 / 5)) + 32;
   }
 
+
+//  This function is used by the sidebar sensor element's checkbox to add/remove sensors from the main sensor view.  
+var sensorAddDeleteFromView = function (sensorID, sensorLabel) {
+    console.log("Checkbox sensor: ", sensorID, " ", sensorLabel);
+
+    checkboxElement = $(".sensor-checkbox").filter("#" + sensorID);
+    console.log("Checkbox:", checkboxElement.is(':checked'));
+
+    if (checkboxElement.is(':checked')) {
+        if ($('.sensor-outer-container').find('#' + sensorID).length === 0 ) {
+            $('.sensor-outer-container').append(
+                '<div class="sensor" id="' + sensorID + '-view">'
+                    + '<div class="sensor-value-div"><span class="nobr"><span class="sensor-value' + '" id="' + sensorID + '"> -- </span> &deg;F:  '
+                    +   '<input class="sensor-label-input input-value" type="text" id="' + sensorID + '" value="' + sensorLabel + '"></span></div>'
+                + '</div>'
+            );
+        }
+    } else {
+        console.log("Removing: ", $('.sensor-outer-container').find(".sensor").filter('#' + sensorID + '-view'));
+        $('.sensor-outer-container').find(".sensor").filter('#' + sensorID + '-view').remove();
+    }
+}
+
 // Get current sensors from Master and render them to the UI.  
 socket.on('renderSensors', (parms) => {
     var idSelector;
@@ -102,14 +124,6 @@ socket.on('renderSensors', (parms) => {
     var parameters = JSON.parse(parms);
     // console.log('Render sensors: ', parms);
     console.log('Render sensors: ');
-    // Throw away the current sensor elements
-    // $('#sensors').find('.sensor').remove();
-
-    // Remove all sensor options from the sensor selectors.
-    // $('#target-sensor-selector1').empty();
-    // $('#limit-sensor-selector1').empty();
-    // $('#target-sensor-selector2').empty();
-    // $('#limit-sensor-selector2').empty();
 
     console.log('renderSensors sensors array: ', parameters.sensors);
     console.log('renderSensors config: ', parameters.config);
@@ -122,17 +136,21 @@ socket.on('renderSensors', (parms) => {
             var newTemp = (sensor.units==='C'?cToF(parseFloat(sensor.value)):parseFloat(sensor.value)).toFixed(1);
             $('.sidebar').append(
                 '<div class="sensor">'
-                    + '<div class="sensor-value-div"><nobr><span class="sensor-value' + '" id="' + sensor.sensorid + '">' + newTemp + '</span> &deg;F:  '
-                    +   '<input class="sensor-label-input input-value" type="text" id="' + sensor.sensorid + '" value="' + sensor.label + '"></nobr></div>'
+                    + '<div class="sensor-value-div"><span class="nobr"><input type="checkbox" class="sensor-checkbox" id="' + sensor.sensorid + '" value="' + sensor.label + '" onclick="sensorAddDeleteFromView(this.id, this.value)"><span class="sensor-value' + '" id="' + sensor.sensorid + '">' + newTemp + '</span> &deg;F:  '
+                    +   '<input class="sensor-label-input input-value" type="text" id="' + sensor.sensorid + '" value="' + sensor.label + '"></span></div>'
                 + '</div>'
             );
-            // //  Temporarily add new sensor to watched sensor container too.  
-            // $('.sensor-outer-container').append(
-            //     '<div class="sensor">'
-            //         + '<div class="sensor-value-div"><nobr><span class="sensor-value' + '" id="' + sensor.sensorid + '">' + newTemp + '</span> &deg;F:  '
-            //         +   '<input class="sensor-label-input input-value" type="text" id="' + sensor.sensorid + '" value="' + sensor.label + '"></nobr></div>'
-            //     + '</div>'
-            // );
+             //  By default,  add new sensor to watched sensor container too.  
+            $('.sensor-outer-container').append(
+                '<div class="sensor" id="' + sensor.sensorid + '-view">'
+                    + '<div class="sensor-value-div"><span class="nobr"><span class="sensor-value' + '" id="' + sensor.sensorid + '">' + newTemp + '</span> &deg;F:  '
+                    +   '<input class="sensor-label-input input-value" type="text" id="' + sensor.sensorid + '" value="' + sensor.label + '"></span></div>'
+                + '</div>'
+            );
+
+            // Check the corresponding checkbox in the sidebar
+            $(".sensor-checkbox").filter("#" + sensor.sensorid).prop('checked', true);
+
             idSelector = '#sensor-value' + index;
             $(idSelector).css("color", "black");
 
@@ -169,17 +187,17 @@ socket.on('updateSensor', function(message) {
     message = JSON.parse(message);
     console.log('Sensor update: ', message);
 
-    var previousTemp = parseFloat($('.sensor-value').filter('#'+message.sensorid).text());
+    var previousTemp = parseFloat($('.sensor-value').filter('#' + message.sensorid).text());
     var newTemp = (message.units==='C'?cToF(parseFloat(message.value)):parseFloat(message.value)).toFixed(1);
     console.log('Temp convert: ', message.value, message.units, newTemp);
     console.log('Sensor text: ', $('.sensor-value').filter('#'+message.sensorid).text(newTemp));
 
     if(newTemp > previousTemp) {
-        $('.sensor-value').filter('#'+message.sensorid).css('color', 'red');
+        $('.sensor-value').filter('#' + message.sensorid).css('color', 'red');
     } else if(newTemp < previousTemp) {
-        $('.sensor-value').filter('#'+message.sensorid).css('color', 'blue');
+        $('.sensor-value').filter('#' + message.sensorid).css('color', 'blue');
     } else {
-        $('.sensor-value').filter('#'+message.sensorid).css('color', 'black');
+        $('.sensor-value').filter('#' + message.sensorid).css('color', 'black');
     }
 });
 

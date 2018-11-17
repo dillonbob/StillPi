@@ -1,4 +1,3 @@
-
 // START UI CONTROLLER
 var heaterControl = require('./heaterController.js');
 var sensorControl = require('./sensorController.js');
@@ -272,4 +271,4 @@ var uiController = (function () {
 })();
 // END UI CONTROLLER
 
-module.exports = uiController;
+module.exports = uiController
