@@ -115,7 +115,7 @@ var sensorController = (function () {
 
                 // Find the index of the reporting sensor in the session sensors array.  
                 var index = sensors.findIndex(sensor => sensor.sensorid === message.sensorid);
-                // console.log('sensorController: Updating sensor: ', sensors[index]);
+                console.log('sensorController: Updating sensor: ', sensors[index]);
 
                 // Update the sensor temperature value in the session array.  
                 sensors[index].value = message.value;

@@ -1,3 +1,6 @@
+
+
+
 // START HEATER CONTROLLER
 var heaterController = (function () {
 
@@ -140,7 +143,7 @@ var heaterController = (function () {
           uiController.updateHeaterCurrentTemp(1, displayTemp);
         } else { // Sensors available and limit not exceeded
           // console.log('heaterController: Sensors for heater 1 available and limit not exceeded(Limit = ', LimitValue1, ', current limit temp = ', currLimitSensorValue1, ').  Proceeding.');
-          if (heater1correction < 100) {  // PID update value is NOT 100
+          if ((heater1correction < 100) && (heater1correction != 0)) {  // PID update value is NOT 100 or 0
             // console.log('heaterController: PID calculated for heater 1 and less than 100%.  Turning heater 1 off and scheduling function to turn it on.');
             setHeaterState(1, false);     // Turn heater 1 off
             // uiController.setHeaterIndicator( 1, 'off');  //  Turn indicator off
@@ -220,7 +223,7 @@ var heaterController = (function () {
         if (sensorsAvailable2) {  // No sensor reports have come in yet.  
           // console.log('heaterController: Sensors available for heater 2.  Calculating PID correction value.');
           heater2correction = pids[1].calculate(parseFloat(targetSensor2Temp));  // Calculate the PID correction value.    
-          // console.log('heaterController: Heater 2 PID correction value = ', heater2correction);
+          console.log('heaterController: Heater 2 PID correction value = ', heater2correction);
   // ***********  Comment the following line out for production!
           // heater2correction = 33;  // Used for testing in development.  
         } else {
@@ -249,8 +252,8 @@ var heaterController = (function () {
             uiController.updateHeaterCurrentTemp(2, displayTemp);
           } else { // Sensors available and limit not exceeded
             // console.log('heaterController: Sensors for heater 2 available and limit not exceeded(Limit = ', LimitValue2, ', current limit temp = ', currLimitSensorValue2, ').  Proceeding.');
-            if (heater2correction < 100) {  // PID update value is NOT 100
-              console.log('heaterController: PID calculated for heater 2 and less than 100%.  Turning heater 2 on and scheduling function to turn it off.');
+            if ((heater2correction < 100) && (heater2correction != 0)) {  // PID update value is NOT 100
+              console.log('heaterController: PID calculated for heater 2 and less than 100%.  Turning heater 2 on and scheduling function to turn it off: ', heater2correction);
               setHeaterState(2, true);     // Turn heater 2 on
               // uiController.setHeaterIndicator(2, 'on');  //  Turn indicator on
               // Setup delayed function to turn it off
