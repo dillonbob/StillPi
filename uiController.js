@@ -40,73 +40,87 @@ var uiController = (function () {
             case 'heater-label1': 
                 console.log('uiController: Updated parameter heater-label1 to ', data.value);
                 global.configProxy.heaters[0].heaterLabel = data.value;
+                initParams();
                 break;
 
             case 'heater-label2': 
                 console.log('uiController: Updated parameter heater-label2 to ', data.field);
                 global.configProxy.heaters[1].heaterLabel = data.value;
+                initParams();
                 break;
 
             case 'heater-target-value1': 
                 console.log('uiController: Updated parameter heater-target-value1 to ', data.field);
                 global.configProxy.heaters[0].pidParameters.sv = data.value;
                 heaterControl.changeHeaterPidTarget(1, data.value)
+                initParams();
                 break;
 
             case 'heater-target-value2': 
                 console.log('uiController: Updated parameter heater-target-value2 to ', data.field);
                 global.configProxy.heaters[1].pidParameters.sv = data.value;
                 heaterControl.changeHeaterPidTarget(2, data.value)
+                initParams();
                 break;
 
             case 'target-sensor-selector1': 
                 console.log('uiController: Updated parameter target-sensor-selector1 to ', data.field);
                 global.configProxy.heaters[0].pidParameters.pvSensor = data.value;
+                initParams();
                 break;
 
             case 'target-sensor-selector2': 
                 console.log('uiController: Updated parameter target-sensor-selector2 to ', data.field);
                 global.configProxy.heaters[1].pidParameters.pvSensor = data.value;
+                initParams();
                 break;
 
             case 'heater-limit-value1': 
                 console.log('uiController: Updated parameter heater-limit-value1 to ', data.field);
                 global.configProxy.heaters[0].pidParameters.limitValue = data.value;
+                initParams();
                 break;
 
             case 'heater-limit-value2': 
                 console.log('uiController: Updated parameter heater-limit-value2 to ', data);
                 global.configProxy.heaters[1].pidParameters.limitValue = data.value;
+                initParams();
                 break;
 
             case 'limit-sensor-selector1': 
                 console.log('uiController: Updated parameter limit-sensor-selector1 to ', data.field);
                 global.configProxy.heaters[0].pidParameters.limitSensor = data.value;
+                initParams();
                 break;
 
             case 'limit-sensor-selector2': 
                 console.log('uiController: Updated parameter limit-sensor-selector2 to ', data.field);
                 global.configProxy.heaters[1].pidParameters.limitSensor = data.value;
+                initParams();
                 break;
 
             case 'heater-power-value1': 
                 console.log('uiController: Updated parameter heater-power-value1 to ', data.field);
                 global.configProxy.heaters[0].powerParameters.outputPower = data.value;
+                initParams();
                 break;
 
             case 'heater-power-value2': 
                 console.log('uiController: Updated parameter heater-power-value2 to ', data.field);
                 global.configProxy.heaters[1].powerParameters.outputPower = data.value;
+                initParams();
                 break;
 
             case 'logging-filename': 
                 console.log('uiController: Updated parameter logging-filename to ', data.field);
                 global.configProxy.logging.filename = data.value;
+                initParams();
                 break;
 
             case 'logging-interval-selector': 
                 console.log('uiController: Updated parameter logging-interval-selector to ', data.field);
                 global.configProxy.logging.interval = data.value;
+                initParams();
                 break;
         }
     };
@@ -147,6 +161,8 @@ var uiController = (function () {
                 global.configProxy.logging.state = data.state==='checked'?'on':'off';
                 break
         };
+
+        initParams();
     };
 
 
@@ -167,6 +183,8 @@ var uiController = (function () {
             heaterControl.changeHeatingMode( 2 );
             break;
         }
+
+        initParams();
     };    
 
 
