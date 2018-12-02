@@ -1,6 +1,11 @@
 
 
 
+
+
+
+
+
 var uiController = require('./uiController.js');
 var heaterController = require('./heaterController.js');
 
@@ -17,6 +22,10 @@ var sensorController = (function () {
     var sensors = new Array();
     var server;
     var mosca = require('mosca');
+
+    var sensorMaintenanceInterval = 10;   // In seconds.  
+    var pingMessagesOut = [];
+    var pingMessagesIn = [];
 
     // **********************************
     // ** Mosca authentication methods
@@ -55,6 +64,8 @@ var sensorController = (function () {
         });           
     }
 
+    // This function is called when a remote sensor module announces a sensor on the MQTT broker.  
+    // This function adds the sensor to the persistent and session objects.  
     var addSensor = function (message) {
         var tempSensor;
 
@@ -82,6 +93,12 @@ var sensorController = (function () {
         // console.log('sensorController: Session sensors: ', sensors);
 
         uiController.renderSensors();
+    };
+
+    var deleteSensor = function (sensorIDtoDelete) {
+        sensors = sensors.filter( function (next) {
+            return next.sensorid !== sensorIDtoDelete;
+        });
     };
 
     var isSensorInPersist = function(id) {
@@ -131,10 +148,78 @@ var sensorController = (function () {
             case 'stillpi/sensors/identify/delete':
                 break;
 
-            case 'stillpi/sensors/ping/sensorid':
+            case 'stillpi/sensors/ping':
+                console.log("Ping message: ", message);
+                // Add ping responses to the pingMessages object.  The periodic ping maintenance function will inspect this object.  
+                if (message.type === 'response') {
+                    // If the sensor is not already in the ping sensors list, add it.  
+                    if(!pingMessagesIn.find(function (sensor) { return sensor === message.sensorid; })) {
+                        pingMessagesIn.push(message.sensorid);
+                    }
+                }
                 break;
 
         }
+    };
+
+
+    // This function runs periodically to check if sensors that used to be available are now unavailable.  
+    var pingIntervalStart = function () {
+        console.log("sensorController: ping maintenance function:", pingMessagesIn);
+
+        // Check current list of sensors.  If any of them did not respond to the last ping, remove them.  
+        pingMessagesOut.forEach( (nextSensorID) => {
+            if (!pingMessagesIn.includes(nextSensorID)) { // Sensor disappeared during the last sensor maintenance interval.  
+                console.log("Time to remove sensor ", nextSensorID);
+
+                // Remove from the session sensors list
+                console.log("Session sensors before: ", sensors);
+                deleteSensor(nextSensorID);
+                console.log("Session sensors after: ", sensors);
+
+                // Check if any of the heaters that are turned ON are using this sensor for a target or limit.  If one is, turn it OFF.  
+                if (global.configProxy.heaters[0].state === 'on') {
+                    // if the heater is in PID mode AND one of it's sensors is the sensor being deleted ...
+                    if ((global.configProxy.heaters[0].mode === 'temp') && ((global.configProxy.heaters[0].pidParameters.pvSensor === nextSensorID) || (global.configProxy.heaters[0].pidParameters.limitSensor === nextSensorID))) {
+                        // Change state in global config object
+                        global.configProxy.heaters[0].state = 'off';
+
+                        // Turn the heater off
+                        heaterController.setHeaterState(0, false);
+                    };
+                };
+
+                if (global.configProxy.heaters[1].state === 'on') {
+                    // if the heater is in PID mode AND one of it's sensors is the sensor being deleted ...
+                    if ((global.configProxy.heaters[1].mode === 'temp') && ((global.configProxy.heaters[1].pidParameters.pvSensor === nextSensorID) || (global.configProxy.heaters[1].pidParameters.limitSensor === nextSensorID))) {
+                        // Change state in global config object
+                        global.configProxy.heaters[1].state = 'off';
+
+                        // Turn the heater off
+                        heaterController.setHeaterState(1, false);
+                    };
+                };
+
+                // Update the UI
+                uiController.removeSensor(nextSensorID);
+                uiController.renderParameters();
+            }
+        });
+
+        console.log("Sensors: ", sensors);
+        // Clear the array of sent ping IDs so that we can re-gather it in tis loop.  
+        // The reason we use the pingMessagesOut array is to avoid a condition where a new sensor announces during an interval.  It's now in teh sensors object,
+        // but a ping message was not sent to it in the previous interval.  No response will arrive and we will delete it.  Bad.  
+        // So we use the pingMessagesOut array to make sure that we're only pruning sensors that have been pinged but did not respond.  
+        pingMessagesOut = [];
+        sensors.forEach( (sensor) => {
+            console.log("Pinging sensor ", sensor.sensorid);
+            mqttClient.publish('stillpi/sensors/ping', JSON.stringify({"type": "call", "sensorid": sensor.sensorid}));
+            pingMessagesOut.push(sensor.sensorid);
+        });
+
+        // Empty the pingMessages array to start accumulating new ping responses for the upcoming interval.  
+        pingMessagesIn = [];
     };
   
   
@@ -154,10 +239,10 @@ var sensorController = (function () {
             console.log("sensorController: MQTT broker ready.");
         });
         server.on('clientConnected', (client) => {
-            console.log('sensorController: MQTT client connected.')
+            console.log('sensorController: MQTT client connected: ', client.connection.stream.remoteAddress)
 
             // Whenever a new MQTT slient connectes, ask all sensors to announce themselves.  
-            announceInvoke();
+            // announceInvoke();
         });
         server.on('published', function(packet, client) {
           console.log('MQTT server message published');
@@ -174,6 +259,7 @@ var sensorController = (function () {
             mqttClient.subscribe('stillpi/sensors/report');
             mqttClient.subscribe('stillpi/sensors/identify/invoke');
             mqttClient.subscribe('stillpi/sensors/identify/announce');
+            mqttClient.subscribe('stillpi/sensors/ping');
             // announceInvoke();
         });
         // Setup handler to dispatch incoming MQTT messages.  
@@ -183,6 +269,11 @@ var sensorController = (function () {
             console.log('\n\nsensorController: client connected\n\n', client.id);
             // mqttClient.publish('stillpi/sensors/identify/invoke', JSON.stringify({"class": "all"}));
         });
+
+        // Setup sensor maintenance interval function.  
+        var intervalID = setInterval( function() {
+            pingIntervalStart();
+          }, sensorMaintenanceInterval * 1000); // Once per ten seconds.  
       },
 
       isSensor: function (id) {

@@ -135,7 +135,7 @@ socket.on('renderSensors', (parms) => {
         if ($('.sidebar').find('#' + sensor.sensorid).length === 0 ) {
             var newTemp = (sensor.units==='C'?cToF(parseFloat(sensor.value)):parseFloat(sensor.value)).toFixed(1);
             $('.sidebar').append(
-                '<div class="sensor">'
+                '<div class="sensor" id="' + sensor.sensorid + '-container">'
                     + '<div class="sensor-value-div"><span class="nobr"><input type="checkbox" class="sensor-checkbox" id="' + sensor.sensorid + '" value="' + sensor.label + '" onclick="sensorAddDeleteFromView(this.id, this.value)"><span class="sensor-value' + '" id="' + sensor.sensorid + '">' + newTemp + '</span> &deg;F:  '
                     +   '<input class="sensor-label-input input-value" type="text" id="' + sensor.sensorid + '" value="' + sensor.label + '"></span></div>'
                 + '</div>'
@@ -200,6 +200,17 @@ socket.on('updateSensor', function(message) {
         $('.sensor-value').filter('#' + message.sensorid).css('color', 'black');
     }
 });
+
+
+// Remove a sensor from teh sensors lists.  
+socket.on('removeSensor', (params) => {
+    params = JSON.parse(params);
+
+    console.log("Removing sensor with id ", params, $('#' + params.sensorid + '-container'));
+    $('#' + params.sensorid + '-container').remove();
+    $('#' + params.sensorid + '-view').remove();
+});
+
 
 
 //  Update all parameters using the stored configuration on Master.  

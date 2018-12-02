@@ -1,6 +1,7 @@
 
 
 
+
 // START HEATER CONTROLLER
 var heaterController = (function () {
 
@@ -338,6 +339,10 @@ var heaterController = (function () {
         heater1IntervalStart();
         heater2IntervalStart();
       }, heaterInterval * 1000);
+    },
+
+    setHeaterState: function (heater, state) {
+      setHeaterState(heater, state);    
     },
 
     // Called by the UI controller when the heating mode changes.  Allows the PID controller to be reset.  

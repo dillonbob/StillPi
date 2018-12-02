@@ -256,35 +256,45 @@ var uiController = (function () {
         sensorUpdate: function (message) {
             // console.log('uiController: Updating sensor: ', message);
             io.emit('updateSensor', JSON.stringify(message));
-       },
+        },
 
-       // Re-render all sensors
-       renderSensors: function () {
-            var sensorControl = require('./sensorController.js');
+        // Re-render all sensors
+        renderSensors: function () {
+                var sensorControl = require('./sensorController.js');
 
-//            console.log('uiController: Redering the sensors array ...', sensorControl.getSensors());
-            io.emit('renderSensors', JSON.stringify({sensors: sensorControl.getSensors(), config: global.configProxy}));
-       },
+    //            console.log('uiController: Redering the sensors array ...', sensorControl.getSensors());
+                io.emit('renderSensors', JSON.stringify({sensors: sensorControl.getSensors(), config: global.configProxy}));
+        },
 
-       // Control heater indicators in the UI.  
-       setHeaterIndicator: function (heaterNum, state) {
-            heaterTag = 'heater-power-indicator' + heaterNum;
-            console.log('uiController: ', heaterTag + ' ' + state);
-            io.emit('setParam', {value: heaterTag, state: state});
-       },
+        // Remove a sensor from the UI sensor lists.  
+        removeSensor: function (sensorIDtoRemove) {
+            io.emit('removeSensor', JSON.stringify({sensorid: sensorIDtoRemove}));
+        },
 
-       // Update the heater current temperature value.  
-       updateHeaterCurrentTemp: function (heaterNum, tempValue) {
-           console.log('uiController: updateHeaterCurrentTemp - ', heaterNum, ' ', tempValue);
-           switch (heaterNum) {
-            case 1:
-                io.emit('setParam', {value: 'heater-current-value1', temp: tempValue});
-                break;
-            case 2:
-                io.emit('setParam', {value: 'heater-current-value2', temp: tempValue});
-                break;
-     }
-       }
+        // Update all UI parameters from the global store.  
+        renderParameters: function () {
+            initParams();
+        },
+
+        // Control heater indicators in the UI.  
+        setHeaterIndicator: function (heaterNum, state) {
+                heaterTag = 'heater-power-indicator' + heaterNum;
+                console.log('uiController: ', heaterTag + ' ' + state);
+                io.emit('setParam', {value: heaterTag, state: state});
+        },
+
+        // Update the heater current temperature value.  
+        updateHeaterCurrentTemp: function (heaterNum, tempValue) {
+            console.log('uiController: updateHeaterCurrentTemp - ', heaterNum, ' ', tempValue);
+            switch (heaterNum) {
+                case 1:
+                    io.emit('setParam', {value: 'heater-current-value1', temp: tempValue});
+                    break;
+                case 2:
+                    io.emit('setParam', {value: 'heater-current-value2', temp: tempValue});
+                    break;
+            }
+        }
     }
 })();
 // END UI CONTROLLER
