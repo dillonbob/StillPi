@@ -1,11 +1,3 @@
-
-
-
-
-
-
-
-
 var uiController = require('./uiController.js');
 var heaterController = require('./heaterController.js');
 
@@ -23,7 +15,7 @@ var sensorController = (function () {
     var server;
     var mosca = require('mosca');
 
-    var sensorMaintenanceInterval = 10;   // In seconds.  
+    var sensorMaintenanceInterval = 60;   // In seconds.  
     var pingMessagesOut = [];
     var pingMessagesIn = [];
 
@@ -273,7 +265,7 @@ var sensorController = (function () {
         // Setup sensor maintenance interval function.  
         var intervalID = setInterval( function() {
             pingIntervalStart();
-          }, sensorMaintenanceInterval * 1000); // Once per ten seconds.  
+          }, sensorMaintenanceInterval * 1000); // The interval is set at the top of this file.  
       },
 
       isSensor: function (id) {
