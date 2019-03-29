@@ -11,7 +11,7 @@ var heaterController = (function () {
   // var pidController = require('node-pid-controller');
   var piGPIO = require('onoff').Gpio;
   const heater1 = new piGPIO(23, 'out');
-  const heater2 = new piGPIO(18, 'out');
+  const heater2 = new piGPIO(25, 'out');
 
     // Pulse Width Modulation interval used by the heater for updates.  
     var heaterInterval = 1;   // In seconds.  
