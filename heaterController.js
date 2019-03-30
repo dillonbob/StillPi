@@ -277,7 +277,8 @@ var heaterController = (function () {
           }
         }  
       } else {                      // Constant power mode. 
-        if (global.configProxy.heaters[1].powerParameters.outputPower === 100) {  //If constant power is set to 100%, avoid flicker and set indicator (in case first time through) and heater and return.  
+        console.log('heaterController: Heater 2 outputPower: ', typeof(global.configProxy.heaters[1].powerParameters.outputPower))
+        if (parseFloat(global.configProxy.heaters[1].powerParameters.outputPower) === 100.0) {  //If constant power is set to 100%, avoid flicker and set indicator (in case first time through) and heater and return.  
           // uiController.setHeaterIndicator( 2, 'on');  //  Turn indicator on
           setHeaterState(2, true);  // Turn Heater on.   
         } else {
