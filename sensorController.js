@@ -121,6 +121,10 @@ var sensorController = (function () {
             case 'stillpi/sensors/report':
                 // Call addSensor to make sure that this sensor is in the persistent and session sensor arrays.  
                 addSensor(message);
+                // If the sensor is not already in the ping sensors list, add it.  
+                    if(!pingMessagesIn.find(function (sensor) { return sensor === message.sensorid; })) {
+                    pingMessagesIn.push(message.sensorid);
+                }
 
                 // Find the index of the reporting sensor in the session sensors array.  
                 var index = sensors.findIndex(sensor => sensor.sensorid === message.sensorid);
@@ -135,6 +139,10 @@ var sensorController = (function () {
 
             case 'stillpi/sensors/identify/announce':
                 handleAnnouncement(message);
+                // If the sensor is not already in the ping sensors list, add it.  
+                if(!pingMessagesIn.find(function (sensor) { return sensor === message.sensorid; })) {
+                    pingMessagesIn.push(message.sensorid);
+                }               
                 break;
             
             case 'stillpi/sensors/identify/delete':

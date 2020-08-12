@@ -1,5 +1,62 @@
 var socket = io.connect({'forceNew': true});
 
+
+
+// This section implements the condensor controls
+
+// Catch both mode switch changes.  
+$(document).on('change', '#dephleg-mode-switch, #product-mode-switch', function() {
+    console.log("Condensor mode switch change.  id: ", this.id.split("-")[0], ", mode: ", this.checked?'auto':'manual');
+    condensorModeChange(this.id.split("-")[0], this.checked?'auto':'manual');
+});
+var condensorModeChange = function(condenser, state) {
+    switch (state) {
+        case 'manual':
+            console.log("manual mode.");
+            $('#' + condenser + '-open-value').prop('disabled', false);
+            $('#' + condenser + '-condenser-slider').prop('disabled', false);
+            $('#' + condenser + '-target-value-container').css('display', 'none');
+            break;
+
+        case 'auto':
+            console.log("auto mode.");
+            $('#' + condenser + '-open-value').prop('disabled', true);
+            $('#' + condenser + '-condenser-slider').prop('disabled', true);
+            $('#' + condenser + '-target-value-container').css('display', '');
+            break;
+
+        default:
+            console.log("ERROR: Invalid condensor mode passed to function condensorModeChange: ", state);
+            break;
+    };
+};
+
+$('#product-condenser-slider').val(50);
+// $('#product-condenser-slider').prop('disabled', true);
+// $('#product-open-value').prop('disabled', true);
+// This function fires when the Product valve slider "slides"
+$(document).on('input', '#product-condenser-slider', function() {
+    $('#product-open-value').val( $(this).val() );
+});
+$(document).on('change', '#product-condenser-slider, #product-open-value', function() {
+    $('#product-open-value').val( $(this).val() );
+    valveSettingChange(this.id, $(this).val());
+});
+// This function fires when the Dephleg valve slider "slides"
+$(document).on('input', '#dephleg-condenser-slider', function() {
+    $('#dephleg-open-value').val( $(this).val() );
+});
+$(document).on('change', '#dephleg-condenser-slider, #dephleg-open-value', function() {
+    $('#dephleg-open-value').val( $(this).val() );
+    valveSettingChange(this.id, $(this).val());
+});
+var valveSettingChange = function(id, setting) {
+    console.log("Valve setting change.  id: ", id, ", setting: ", setting);
+};
+
+
+
+
 // Startup Dragula for sensor dragging.  
 dragula([document.getElementById('sensors')])
 .on("drop", function(el, target, source, sibling) {
@@ -107,7 +164,7 @@ var sensorAddDeleteFromView = function (sensorID, sensorLabel) {
             $('.sensor-outer-container').append(
                 '<div class="sensor" id="' + sensorID + '-view">'
                     + '<div class="sensor-value-div"><span class="nobr"><span class="sensor-value' + '" id="' + sensorID + '"> -- </span> &deg;F:  '
-                    +   '<input class="sensor-label-input input-value" type="text" id="' + sensorID + '" value="' + sensorLabel + '"></span></div>'
+                    +   '<input class="sensor-label-input" type="text" id="' + sensorID + '" value="' + sensorLabel + '"></span></div>'
                 + '</div>'
             );
         }
@@ -137,14 +194,14 @@ socket.on('renderSensors', (parms) => {
             $('.sidebar').append(
                 '<div class="sensor" id="' + sensor.sensorid + '-container">'
                     + '<div class="sensor-value-div"><span class="nobr"><input type="checkbox" class="sensor-checkbox" id="' + sensor.sensorid + '" value="' + sensor.label + '" onclick="sensorAddDeleteFromView(this.id, this.value)"><span class="sensor-value' + '" id="' + sensor.sensorid + '">' + newTemp + '</span> &deg;F:  '
-                    +   '<input class="sensor-label-input input-value" type="text" id="' + sensor.sensorid + '" value="' + sensor.label + '"></span></div>'
+                    +   '<input class="sensor-label-input" type="text" id="' + sensor.sensorid + '" value="' + sensor.label + '"></span></div>'
                 + '</div>'
             );
              //  By default,  add new sensor to watched sensor container too.  
             $('.sensor-outer-container').append(
                 '<div class="sensor" id="' + sensor.sensorid + '-view">'
                     + '<div class="sensor-value-div"><span class="nobr"><span class="sensor-value' + '" id="' + sensor.sensorid + '">' + newTemp + '</span> &deg;F:  '
-                    +   '<input class="sensor-label-input input-value" type="text" id="' + sensor.sensorid + '" value="' + sensor.label + '"></span></div>'
+                    +   '<input class="sensor-label-input" type="text" spellcheck="false" id="' + sensor.sensorid + '" value="' + sensor.label + '"></span></div>'
                 + '</div>'
             );
 
@@ -202,7 +259,7 @@ socket.on('updateSensor', function(message) {
 });
 
 
-// Remove a sensor from teh sensors lists.  
+// Remove a sensor from the sensors lists.  
 socket.on('removeSensor', (params) => {
     params = JSON.parse(params);
 
@@ -248,10 +305,10 @@ socket.on('initParams', function(message) {
     // Sensors
 
     // Logging
-    $('#logging-power').prop( "checked", message.logging.state==='on');
-    console.log('Setting logging filename to: ', message);
-    $('#logging-filename').val(message.logging.filename);
-    $('#logging-interval-selector').val(message.logging.interval);
+    // $('#logging-power').prop( "checked", message.logging.state==='on');
+    // console.log('Setting logging filename to: ', message);
+    // $('#logging-filename').val(message.logging.filename);
+    // $('#logging-interval-selector').val(message.logging.interval);
 });
 
 

@@ -41,7 +41,7 @@ var heaterController = (function () {
   // Turns heaters on and off.  state parameter is boolean and true = on.  
   var setHeaterState = function (heaterNum, state) {
     var stateTag = state?'on.':'off.'
-    console.log('Heater ' + heaterNum + '    turned ' + stateTag);
+    // console.log('Heater ' + heaterNum + '    turned ' + stateTag);
     
     switch (heaterNum) {
 
@@ -87,13 +87,13 @@ var heaterController = (function () {
     let heater1correction;  
     let targetSensor1, limitSensor1, sensorsAvailable1, targetSensorTemp1;
     
-    console.log('\n\nheaterController: Start heater 1 interval.');
+    // console.log('\n\nheaterController: Start heater 1 interval.');
 
     // Check if heater power function is on in the UI.  
     if (global.configProxy.heaters[0].state !== 'on') {
       // Heater not turned on.  Using "not on" rather than off to protect against file and other errors.  State must be 'on'.
 
-      console.log('heaterController: Heater 1 power off.');
+      // console.log('heaterController: Heater 1 power off.');
       // Turn off heater and indicator.  
       // uiController.setHeaterIndicator( 1, 'off');  //  Turn indicator off
       setHeaterState(1, false);     
@@ -111,11 +111,11 @@ var heaterController = (function () {
       // console.log('heaterController: sensorsAvailable calculation for heater 1: ', sensorsAvailable1, ' ',  targetSensor1, ' ', limitSensor1);
 
       // Calculate the PID correction value if sensors are available.  Otherwise, set it to 0.  
-      console.log('heaterController: Preparing to process heater 1.');
+      // console.log('heaterController: Preparing to process heater 1.');
       if (sensorsAvailable1) {  // No sensor reports have come in yet.  
         // console.log('heaterController: Sensors available for heater 1.  Calculating PID correction value: ', targetSensorTemp1, pids[0]);
         heater1correction = pids[0].calculate(parseFloat(targetSensorTemp1));  // Calculate the PID correction value.    
-        console.log('heaterController: Heater 1 PID correction value = ', heater1correction);
+        // console.log('heaterController: Heater 1 PID correction value = ', heater1correction);
   // ***********  Comment the following line out for production!
         // heater1correction = 60;  // Used for testing in development.  
       } else {
@@ -145,12 +145,12 @@ var heaterController = (function () {
         } else { // Sensors available and limit not exceeded
           // console.log('heaterController: Sensors for heater 1 available and limit not exceeded(Limit = ', LimitValue1, ', current limit temp = ', currLimitSensorValue1, ').  Proceeding.');
           if ((heater1correction < 100) && (heater1correction > 3)) {  // PID update value is NOT 100 or 0
-            console.log('heaterController: PID calculated for heater 1 and less than 100%.  Turning heater 1 off and scheduling function to turn it on: ', heater1correction);
+            // console.log('heaterController: PID calculated for heater 1 and less than 100%.  Turning heater 1 off and scheduling function to turn it on: ', heater1correction);
             setHeaterState(1, false);     // Turn heater 1 off
             // uiController.setHeaterIndicator( 1, 'off');  //  Turn indicator off
             // Setup delayed function to turn it on
             setTimeout(function(heater1correction) {    //  Delay using the PID algorithm output.  
-              console.log('heaterController: Heater 1 scheduled function starting.  Turning heater on.');
+              // console.log('heaterController: Heater 1 scheduled function starting.  Turning heater on.');
               // uiController.setHeaterIndicator( 1, 'on');  //  Turn indicator on
               setHeaterState(1, true);  // Turn Heater on.   
               // Update the current temperature field in the UI. 
@@ -178,7 +178,7 @@ var heaterController = (function () {
         setHeaterState(1, false);  // Turn Heater off. 
 
         setTimeout(function() {    //  Delay by the % of the heating interval in the configuration for power mode.  
-          console.log('heaterController: Heater 1 delayed process starting.  Turning heater on.');
+          // console.log('heaterController: Heater 1 delayed process starting.  Turning heater on.');
           // uiController.setHeaterIndicator( 1, 'on');  //  Turn indicator on
           setHeaterState(1, true);  // Turn Heater on.   
         }, (1 - (parseFloat(global.configProxy.heaters[0].powerParameters.outputPower)/100)) * heaterInterval * 1000);  
@@ -192,13 +192,13 @@ var heaterController = (function () {
     let heater2Correction;  
     let targetSensor2, targetSensor2Temp, limitSensor2, sensorsAvailable2;
     
-    console.log('heaterController: Start heater 2 interval.');
+    // console.log('heaterController: Start heater 2 interval.');
 
     // Check if heater power function is on in the UI.  
     if (global.configProxy.heaters[1].state !== 'on') {
       // Heater not turned on.  Using "not on" rather than off to protect against file and other errors.  State must be 'on'.
 
-      console.log('heaterController: Heater 2 power off.');
+      // console.log('heaterController: Heater 2 power off.');
       // Turn off heater and indicator.  
       // uiController.setHeaterIndicator( 2, 'off');  //  Turn indicator off
       setHeaterState(2, false);     
@@ -207,9 +207,9 @@ var heaterController = (function () {
     }
         
     // Process heater 2
-    console.log('heaterController: Scheduling heater 2 processing 25% of interval in future.  ')
+    // console.log('heaterController: Scheduling heater 2 processing 25% of interval in future.  ')
     setTimeout(function() { //  Delay processing of the even heaters by 25% of the heater interval to minimize simultaneous switching of heaters.
-      console.log('heaterController: Starting heater 2 processing.');
+      // console.log('heaterController: Starting heater 2 processing.');
       // Heater 2 starts it's interval processing with the heater and indicator OFF, unless PID correction = 100% or constant power is set to 100%.  
       if ( global.configProxy.heaters[1].mode === 'temp') {   //  PID mode
         targetSensor2 = lookupSensor(global.configProxy.heaters[1].pidParameters.pvSensor);
@@ -220,11 +220,11 @@ var heaterController = (function () {
         // console.log('heaterController: sensorsAvailable calculation for heater 2: ', sensorsAvailable2, ' ',  targetSensor2, ' ', limitSensor2);
 
         // Calculate the PID correction value if sensors are available.  Otherwise, set it to 0.  
-        console.log('heaterController: Preparing to process heater 2.');
+        // console.log('heaterController: Preparing to process heater 2.');
         if (sensorsAvailable2) {  // No sensor reports have come in yet.  
           // console.log('heaterController: Sensors available for heater 2.  Calculating PID correction value.');
           heater2correction = pids[1].calculate(parseFloat(targetSensor2Temp));  // Calculate the PID correction value.    
-          console.log('heaterController: Heater 2 PID correction value = ', heater2correction);
+          // console.log('heaterController: Heater 2 PID correction value = ', heater2correction);
   // ***********  Comment the following line out for production!
           // heater2correction = 33;  // Used for testing in development.  
         } else {
@@ -254,12 +254,12 @@ var heaterController = (function () {
           } else { // Sensors available and limit not exceeded
             // console.log('heaterController: Sensors for heater 2 available and limit not exceeded(Limit = ', LimitValue2, ', current limit temp = ', currLimitSensorValue2, ').  Proceeding.');
             if ((heater2correction < 100) && (heater2correction > 3)) {  // PID update value is NOT 100
-              console.log('heaterController: PID calculated for heater 2 and less than 100%.  Turning heater 2 on and scheduling function to turn it off: ', heater2correction);
+              // console.log('heaterController: PID calculated for heater 2 and less than 100%.  Turning heater 2 on and scheduling function to turn it off: ', heater2correction);
               setHeaterState(2, true);     // Turn heater 2 on
               // uiController.setHeaterIndicator(2, 'on');  //  Turn indicator on
               // Setup delayed function to turn it off
               setTimeout(function(heater2correction) {    //  Delay using the PID algorithm output.  
-                console.log('heaterController: Heater 2 scheduled function starting.  Turning heater off.');
+                // console.log('heaterController: Heater 2 scheduled function starting.  Turning heater off.');
                 // uiController.setHeaterIndicator( 2, 'off');  //  Turn indicator off
                 setHeaterState(2, false);  // Turn Heater off.   
                 // Update the current temperature field in the UI. 
@@ -277,7 +277,7 @@ var heaterController = (function () {
           }
         }  
       } else {                      // Constant power mode. 
-        console.log('heaterController: Heater 2 outputPower: ', typeof(global.configProxy.heaters[1].powerParameters.outputPower))
+        // console.log('heaterController: Heater 2 outputPower: ', typeof(global.configProxy.heaters[1].powerParameters.outputPower))
         if (parseFloat(global.configProxy.heaters[1].powerParameters.outputPower) === 100.0) {  //If constant power is set to 100%, avoid flicker and set indicator (in case first time through) and heater and return.  
           // uiController.setHeaterIndicator( 2, 'on');  //  Turn indicator on
           setHeaterState(2, true);  // Turn Heater on.   
@@ -286,7 +286,7 @@ var heaterController = (function () {
           setHeaterState(2, true);  // Turn Heater off.   
 
           setTimeout(function() {    //  Delay by the % of the heating interval in the configuration for power mode.  
-            console.log('heaterController: Heater 2 delayed process starting.  Turning heater on.');
+            // console.log('heaterController: Heater 2 delayed process starting.  Turning heater on.');
             // uiController.setHeaterIndicator( 2, 'off');  //  Turn indicator off
             setHeaterState(2, false);  // Turn Heater off.   
           }, (parseFloat(global.configProxy.heaters[1].powerParameters.outputPower)/100) * heaterInterval * 1000);  
