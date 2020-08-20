@@ -4,6 +4,7 @@ var localSensors = require('./localSensors.js');
 var heaterController = require('./heaterController.js');
 var uiController = require('./uiController.js');
 var loggingController = require('./loggingController.js');
+var condenserController = require('./condenserController.js');
 var config = require('./configController.js');
 
 
@@ -67,6 +68,8 @@ var controller = (function (sensorCtrl, mqttCtrl) {
 //        localSensors.init();
         // Initialize the heater controller.  
         heaterController.init();
+        // Initialize the condenser controller
+        condenserController.init();
         // Initialize the logging controller.  
         loggingController.init();
   
@@ -75,7 +78,7 @@ var controller = (function (sensorCtrl, mqttCtrl) {
   }
   
 // })(sensorController, heaterController, uiController, loggingController);
-})(sensorController, heaterController, uiController, loggingController, config.configController);
+})(sensorController, heaterController, uiController, loggingController, condenserController, config.configController);
   
   
 controller.init();

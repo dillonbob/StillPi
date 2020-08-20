@@ -1,5 +1,6 @@
 var uiController = require('./uiController.js');
 var heaterController = require('./heaterController.js');
+var condenserControl = require('./condenserController.js');
 
 // START SENSOR CONTROLLER
 var sensorController = (function () {
@@ -46,6 +47,8 @@ var sensorController = (function () {
     }
 
     var announceInvoke = function() {
+        var condenserControl = require('./condenserController.js');
+
         console.log('sensorController: Publish invoke message');
         mqttClient.publish("stillpi/sensors/identify/invoke", JSON.stringify({"class": "all"}), (err)=>{
             if (!err) {
@@ -54,6 +57,18 @@ var sensorController = (function () {
                 console.log('sensorController: Error pulishing invoke message - ', err);
             }
         });           
+
+        console.log('condenserController: Publish invoke message');
+        condenserControl.invokeCondenser();
+        // mqttClient.publish("stillpi/sensors/identify/invoke", JSON.stringify({"class": "all"}), (err)=>{
+        //     if (!err) {
+        //         console.log('sensorController: Invoke message published successfully.');
+        //     } else {
+        //         console.log('sensorController: Error pulishing invoke message - ', err);
+        //     }
+        // });           
+
+        
     }
 
     // This function is called when a remote sensor module announces a sensor on the MQTT broker.  
@@ -122,7 +137,7 @@ var sensorController = (function () {
                 // Call addSensor to make sure that this sensor is in the persistent and session sensor arrays.  
                 addSensor(message);
                 // If the sensor is not already in the ping sensors list, add it.  
-                    if(!pingMessagesIn.find(function (sensor) { return sensor === message.sensorid; })) {
+                if(!pingMessagesIn.find(function (sensor) { return sensor === message.sensorid; })) {
                     pingMessagesIn.push(message.sensorid);
                 }
 
@@ -148,8 +163,9 @@ var sensorController = (function () {
             case 'stillpi/sensors/identify/delete':
                 break;
 
+
             case 'stillpi/sensors/ping':
-                console.log("Ping message: ", message);
+                console.log("Sensor Ping message: ", message);
                 // Add ping responses to the pingMessages object.  The periodic ping maintenance function will inspect this object.  
                 if (message.type === 'response') {
                     // If the sensor is not already in the ping sensors list, add it.  
@@ -159,7 +175,40 @@ var sensorController = (function () {
                 }
                 break;
 
-        }
+            //  **************************************************
+            //  HANDLE COMMUNICTIONS WITH THE CONDENSER CONTROLLER
+            //  **************************************************
+            case 'stillpi/condenser/ping':
+                console.log("Condenser Ping message: ", message);
+                // Add ping responses to the pingMessages object.  The periodic ping maintenance function will inspect this object.  
+                if (message.type === 'response') {
+                    condenserControl.pingReceived();
+                }
+                break;
+    
+            case 'stillpi/condenser/identify/announce':
+                console.log("Condenser controller announced itself: ", message);
+                condenserControl.condenserIdentify(message);
+                break;
+
+            case 'stillpi/condenser/temperature':
+                console.log("Temperature reading from the condenser controller: ", message);
+                condenserControl.tempReport(message);
+                break;
+
+            case 'stillpi/condenser/valvePosition':
+                console.log("Valve position from the condenser controller to the UI: ", message);
+                condenserControl.valvePosition(message);
+                break;
+
+
+            case 'stillpi/condenser/getParams':
+                console.log("condenserController parameters request: ", message);
+                if (message.type === 'response') {
+                    condenserControl.paramsUpdateResponse(message.config);
+                }
+                break;
+        };
     };
 
 
@@ -245,7 +294,8 @@ var sensorController = (function () {
             // announceInvoke();
         });
         server.on('published', function(packet, client) {
-          console.log('MQTT server message published');
+            // console.log('MQTT server message published: ', packet);
+            console.log('MQTT server message published');
         });
         
         //Setup the MQTT client that this sensor controller uses to receive sensor data from slaves.  
@@ -260,7 +310,12 @@ var sensorController = (function () {
             mqttClient.subscribe('stillpi/sensors/identify/invoke');
             mqttClient.subscribe('stillpi/sensors/identify/announce');
             mqttClient.subscribe('stillpi/sensors/ping');
-            // announceInvoke();
+            mqttClient.subscribe('stillpi/condenser/ping');
+            mqttClient.subscribe('stillpi/condenser/identify/announce');
+            mqttClient.subscribe('stillpi/condenser/temperature');
+            mqttClient.subscribe('stillpi/condenser/getParams');
+            mqttClient.subscribe('stillpi/condenser/valvePosition');
+            announceInvoke();
         });
         // Setup handler to dispatch incoming MQTT messages.  
         mqttClient.on('message', mqttMessageHandler);
@@ -273,7 +328,7 @@ var sensorController = (function () {
         // Setup sensor maintenance interval function.  
         var intervalID = setInterval( function() {
             pingIntervalStart();
-          }, sensorMaintenanceInterval * 1000); // The interval is set at the top of this file.  
+        }, sensorMaintenanceInterval * 1000); // The interval is set at the top of this file.  
       },
 
       isSensor: function (id) {

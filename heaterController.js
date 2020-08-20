@@ -28,7 +28,7 @@ var heaterController = (function () {
       Ki: 1000,
       Kd: 9
     };
-
+    var pidMaxPower = 1000;
     // // Holds the PID controller objects.  
     // var pids;
 
@@ -144,7 +144,7 @@ var heaterController = (function () {
           uiController.updateHeaterCurrentTemp(1, displayTemp);
         } else { // Sensors available and limit not exceeded
           // console.log('heaterController: Sensors for heater 1 available and limit not exceeded(Limit = ', LimitValue1, ', current limit temp = ', currLimitSensorValue1, ').  Proceeding.');
-          if ((heater1correction < 100) && (heater1correction > 3)) {  // PID update value is NOT 100 or 0
+          if ((heater1correction < pidMaxPower) && (heater1correction > pidMaxPower*0.03)) {  // PID update value is NOT 100 or 0
             // console.log('heaterController: PID calculated for heater 1 and less than 100%.  Turning heater 1 off and scheduling function to turn it on: ', heater1correction);
             setHeaterState(1, false);     // Turn heater 1 off
             // uiController.setHeaterIndicator( 1, 'off');  //  Turn indicator off
@@ -156,7 +156,7 @@ var heaterController = (function () {
               // Update the current temperature field in the UI. 
               let displayTemp = (targetSensor1.units==='C'?cToF(parseFloat(targetSensor1.value)):parseInt(targetSensor1.value)).toFixed(1);
               uiController.updateHeaterCurrentTemp(1, displayTemp);
-            }, (1 - (heater1correction/100.0)) * heaterInterval * 1000);  
+            }, (1 - (heater1correction/pidMaxPower)) * heaterInterval * 1000);  
           } else {
             // Update the current temperature field in the UI. 
             let displayTemp = (targetSensor1.units==='C'?cToF(parseFloat(targetSensor1.value)):parseInt(targetSensor1.value)).toFixed(1);
@@ -253,7 +253,7 @@ var heaterController = (function () {
             uiController.updateHeaterCurrentTemp(2, displayTemp);
           } else { // Sensors available and limit not exceeded
             // console.log('heaterController: Sensors for heater 2 available and limit not exceeded(Limit = ', LimitValue2, ', current limit temp = ', currLimitSensorValue2, ').  Proceeding.');
-            if ((heater2correction < 100) && (heater2correction > 3)) {  // PID update value is NOT 100
+            if ((heater2correction < pidMaxPower) && (heater2correction > pidMaxPower*0.03)) {  // PID update value is NOT 100
               // console.log('heaterController: PID calculated for heater 2 and less than 100%.  Turning heater 2 on and scheduling function to turn it off: ', heater2correction);
               setHeaterState(2, true);     // Turn heater 2 on
               // uiController.setHeaterIndicator(2, 'on');  //  Turn indicator on
@@ -265,7 +265,7 @@ var heaterController = (function () {
                 // Update the current temperature field in the UI. 
                 let displayTemp = (targetSensor2.units==='C'?cToF(parseFloat(targetSensor2.value)):parseInt(targetSensor2.value)).toFixed(1);
                 uiController.updateHeaterCurrentTemp(2, displayTemp);
-              }, (1 - (heater2correction/100.0)) * heaterInterval * 1000);  
+              }, (1 - (heater2correction/pidMaxPower)) * heaterInterval * 1000);  
             } else {
               // console.log('heaterController: Heater 2 PID correction value is 100%.  Turn heater on and do nothing.');
               setHeaterState(2, true);     
@@ -316,7 +316,7 @@ var heaterController = (function () {
           temp: {
             ref: parseInt(global.configProxy.heaters[0].pidParameters.sv)         // Point temperature 
           },
-          Pmax: 100,       // Max power (output),
+          Pmax: pidMaxPower,       // Max power (output),
           
           // Tune the PID Controller
           Kp: pidParms.Kp,           // PID: Kp
@@ -326,7 +326,7 @@ var heaterController = (function () {
           temp: {
             ref: parseInt(global.configProxy.heaters[1].pidParameters.sv)         // Point temperature 
           },
-          Pmax: 100,       // Max power (output),
+          Pmax: pidMaxPower,       // Max power (output),
           
           // Tune the PID Controller
           Kp: pidParms.Kp,           // PID: Kp
@@ -356,7 +356,7 @@ var heaterController = (function () {
               temp: {
                 ref: parseInt(global.configProxy.heaters[0].pidParameters.sv)         // Point temperature 
               },
-              Pmax: 100,       // Max power (output),
+              Pmax: pidMaxPower,       // Max power (output),
               
               // Tune the PID Controller
               Kp: pidParms.Kp,           // PID: Kp
@@ -371,7 +371,7 @@ var heaterController = (function () {
               temp: {
                 ref: parseInt(global.configProxy.heaters[1].pidParameters.sv)         // Point temperature 
               },
-              Pmax: 100,       // Max power (output),
+              Pmax: pidMaxPower,       // Max power (output),
               
               // Tune the PID Controller
               Kp: pidParms.Kp,           // PID: Kp
@@ -390,7 +390,7 @@ var heaterController = (function () {
         temp: {
           ref: parseInt(global.configProxy.heaters[heaterNum-1].pidParameters.sv)         // Point temperature 
         },
-        Pmax: 100,       // Max power (output),
+        Pmax: pidMaxPower,       // Max power (output),
         
         // Tune the PID Controller
         Kp: pidParms.Kp,           // PID: Kp

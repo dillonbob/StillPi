@@ -1,6 +1,7 @@
 // START UI CONTROLLER
 var heaterControl = require('./heaterController.js');
-var sensorControl = require('./sensorController.js');
+// var sensorControl = require('./sensorController.js');
+var condenserControl = require('./condenserController.js');
 
 
 
@@ -122,6 +123,16 @@ var uiController = (function () {
                 global.configProxy.logging.interval = data.value;
                 initParams();
                 break;
+            case 'condenser':
+                console.log('uiController: Updated condenser parameter: ', data.field, ", ", data.value);
+                // //  Relay the update to UI clients
+                // io.emit('condenser', data);
+                //  Send update to the slave module
+                condenserControl.uiInput(data);
+                break;
+            default: 
+                console.log('uiController: Uknown UI parameter.');
+                break;
         }
     };
 
@@ -227,6 +238,8 @@ var uiController = (function () {
     var initParams = function () {
         console.log('uiController: Sending configuration to the UI: ');
         io.emit('initParams', JSON.stringify(global.configProxy));
+
+        condenserControl.updateParams();
     };
 
     return {
@@ -294,7 +307,22 @@ var uiController = (function () {
                     io.emit('setParam', {value: 'heater-current-value2', temp: tempValue});
                     break;
             }
-        }
+        },
+
+        forwardCondenserTemp: function (message) {
+            console.log("uiController: forwardCondenserTemp: ", message);
+            io.emit('condenser', {'action': 'update', 'field': 'condenser', 'value': message});
+        },
+        
+        forwardCondenserAdd: function (message) {
+            // console.log("uiController: forwardCondenserTemp: ", message);
+            io.emit('condenser', {'action': 'add', 'value': message});
+        },
+        
+        forwardCondenserDelete: function () {
+            io.emit('condenser', {'action': 'delete', 'value': {}});
+        },
+        
     }
 })();
 // END UI CONTROLLER

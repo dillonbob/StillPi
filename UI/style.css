@@ -575,7 +575,7 @@ ul li a:hover{
 .target-value {
     border: none;
     font-size: 16pt;
-    color: red;
+    color: green;
     width: 50pt;
     vertical-align: middle;
     text-align: center;
