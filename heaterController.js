@@ -115,7 +115,7 @@ var heaterController = (function () {
       if (sensorsAvailable1) {  // No sensor reports have come in yet.  
         // console.log('heaterController: Sensors available for heater 1.  Calculating PID correction value: ', targetSensorTemp1, pids[0]);
         heater1correction = pids[0].calculate(parseFloat(targetSensorTemp1));  // Calculate the PID correction value.    
-        // console.log('heaterController: Heater 1 PID correction value = ', heater1correction);
+        console.log('heaterController: Heater 1 PID correction value = ', heater1correction);
   // ***********  Comment the following line out for production!
         // heater1correction = 60;  // Used for testing in development.  
       } else {
@@ -224,7 +224,7 @@ var heaterController = (function () {
         if (sensorsAvailable2) {  // No sensor reports have come in yet.  
           // console.log('heaterController: Sensors available for heater 2.  Calculating PID correction value.');
           heater2correction = pids[1].calculate(parseFloat(targetSensor2Temp));  // Calculate the PID correction value.    
-          // console.log('heaterController: Heater 2 PID correction value = ', heater2correction);
+          console.log('heaterController: Heater 2 PID correction value = ', heater2correction);
   // ***********  Comment the following line out for production!
           // heater2correction = 33;  // Used for testing in development.  
         } else {
