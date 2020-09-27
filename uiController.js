@@ -298,7 +298,7 @@ var uiController = (function () {
 
         // Update the heater current temperature value.  
         updateHeaterCurrentTemp: function (heaterNum, tempValue) {
-            console.log('uiController: updateHeaterCurrentTemp - ', heaterNum, ' ', tempValue);
+            // console.log('uiController: updateHeaterCurrentTemp - ', heaterNum, ' ', tempValue);
             switch (heaterNum) {
                 case 1:
                     io.emit('setParam', {value: 'heater-current-value1', temp: tempValue});

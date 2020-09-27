@@ -379,9 +379,9 @@ socket.on('renderSensors', (parms) => {
             .attr("value",sensor.sensorid)
             .text(sensor.label)); 
 
-            $('#limit-sensor-selector1').append($("<option></option>")
-            .attr("value",sensor.sensorid)
-            .text(sensor.label)); 
+            // $('#limit-sensor-selector1').append($("<option></option>")
+            // .attr("value",sensor.sensorid)
+            // .text(sensor.label)); 
 
             $('#target-sensor-selector2').append($("<option></option>")
             .attr("value",sensor.sensorid)
@@ -396,8 +396,8 @@ socket.on('renderSensors', (parms) => {
     // Select the sensor in the sensor selectors if the sensor is present.  
     $('#target-sensor-selector1').val(parameters.config.heaters[0].pidParameters.pvSensor);
     $('#target-sensor-selector2').val(parameters.config.heaters[1].pidParameters.pvSensor);
-    $('#limit-sensor-selector1').val(parameters.config.heaters[0].pidParameters.limitSensor);
-    $('#limit-sensor-selector2').val(parameters.config.heaters[1].pidParameters.limitSensor);
+    // $('#limit-sensor-selector1').val(parameters.config.heaters[0].pidParameters.limitSensor);
+    // $('#limit-sensor-selector2').val(parameters.config.heaters[1].pidParameters.limitSensor);
 });
 
 
@@ -458,10 +458,10 @@ socket.on('initParams', function(message) {
     $('#target-sensor-selector2').val(message.heaters[1].pidParameters.pvSensor);
     $('#heater-target-value1').val(message.heaters[0].pidParameters.sv);
     $('#heater-target-value2').val(message.heaters[1].pidParameters.sv);
-    $('#limit-sensor-selector1').val(message.heaters[0].pidParameters.limitSensor);
-    $('#limit-sensor-selector2').val(message.heaters[1].pidParameters.limitSensor);
-    $('#heater-limit-value1').val(message.heaters[0].pidParameters.limitValue);
-    $('#heater-limit-value2').val(message.heaters[1].pidParameters.limitValue);
+    // $('#limit-sensor-selector1').val(message.heaters[0].pidParameters.limitSensor);
+    // $('#limit-sensor-selector2').val(message.heaters[1].pidParameters.limitSensor);
+    // $('#heater-limit-value1').val(message.heaters[0].pidParameters.limitValue);
+    // $('#heater-limit-value2').val(message.heaters[1].pidParameters.limitValue);
     $('#heater-power-value1').val(message.heaters[0].powerParameters.outputPower);
     $('#heater-power-value2').val(message.heaters[1].powerParameters.outputPower);
     

@@ -24,11 +24,11 @@ var heaterController = (function () {
     //   Kd: 150
     // };
     var pidParms = {
-      Kp: 25,
-      Ki: 1000,
-      Kd: 9
+      Kp: 3,
+      Ki: 272,
+      Kd: 100
     };
-    var pidMaxPower = 1000;
+    var pidMaxPower = 100;
     // // Holds the PID controller objects.  
     // var pids;
 
@@ -115,7 +115,8 @@ var heaterController = (function () {
       if (sensorsAvailable1) {  // No sensor reports have come in yet.  
         // console.log('heaterController: Sensors available for heater 1.  Calculating PID correction value: ', targetSensorTemp1, pids[0]);
         heater1correction = pids[0].calculate(parseFloat(targetSensorTemp1));  // Calculate the PID correction value.    
-        console.log('heaterController: Heater 1 PID correction value = ', heater1correction);
+        console.log("PROCESSDATA - heater1 - ", Date.now(), " - ", parseInt(global.configProxy.heaters[0].pidParameters.sv), " - ", targetSensorTemp1, " - ", heater1correction);
+        // console.log('heaterController: Heater 1 PID correction value = ', heater1correction);
   // ***********  Comment the following line out for production!
         // heater1correction = 60;  // Used for testing in development.  
       } else {
@@ -133,39 +134,34 @@ var heaterController = (function () {
         currLimitSensorValue1 = limitSensor1.units==='C'?cToF(limitSensor1.value):parseFloat(limitSensor1.value);
         LimitValue1 = parseFloat(global.configProxy.heaters[0].pidParameters.limitValue);
   
-        // console.log('Lim sensor 1: ', currLimitSensorValue1, ', type: ', typeof(currLimitSensorValue1), ', limit 1: ', LimitValue1, ', type: ', typeof(LimitValue1));
-        if (currLimitSensorValue1 > LimitValue1) {   //  If limit exceeded.  
-          // console.log('heaterController: Heater 1 limit (', global.configProxy.heaters[0].pidParameters.limitValue, ') exceeded (', limitSensor1.units==='C'?cToF(limitSensor1.value):limitSensor1.value, ').  Turning off heater.');
-          // turn off heaters, update current value
-          setHeaterState(1, false);     
-          // uiController.setHeaterIndicator( 1, 'off');  //  Turn indicator off
+        console.log('heaterController: PID calculated for heater 1: ', heater1correction);
+        if (heater1correction >= pidMaxPower) {  // PID update value is at or above the max, turn power on full
           // Update the current temperature field in the UI. 
           let displayTemp = (targetSensor1.units==='C'?cToF(parseFloat(targetSensor1.value)):parseInt(targetSensor1.value)).toFixed(1);
           uiController.updateHeaterCurrentTemp(1, displayTemp);
-        } else { // Sensors available and limit not exceeded
-          // console.log('heaterController: Sensors for heater 1 available and limit not exceeded(Limit = ', LimitValue1, ', current limit temp = ', currLimitSensorValue1, ').  Proceeding.');
-          if ((heater1correction < pidMaxPower) && (heater1correction > pidMaxPower*0.03)) {  // PID update value is NOT 100 or 0
-            // console.log('heaterController: PID calculated for heater 1 and less than 100%.  Turning heater 1 off and scheduling function to turn it on: ', heater1correction);
-            setHeaterState(1, false);     // Turn heater 1 off
-            // uiController.setHeaterIndicator( 1, 'off');  //  Turn indicator off
-            // Setup delayed function to turn it on
-            setTimeout(function(heater1correction) {    //  Delay using the PID algorithm output.  
-              // console.log('heaterController: Heater 1 scheduled function starting.  Turning heater on.');
-              // uiController.setHeaterIndicator( 1, 'on');  //  Turn indicator on
-              setHeaterState(1, true);  // Turn Heater on.   
-              // Update the current temperature field in the UI. 
-              let displayTemp = (targetSensor1.units==='C'?cToF(parseFloat(targetSensor1.value)):parseInt(targetSensor1.value)).toFixed(1);
-              uiController.updateHeaterCurrentTemp(1, displayTemp);
-            }, (1 - (heater1correction/pidMaxPower)) * heaterInterval * 1000);  
-          } else {
+          // uiController.setHeaterIndicator( 1, 'on');  //  Turn indicator on
+          setHeaterState(1, true);  // Turn Heater on.   
+
+          // console.log('heaterController: Heater 1 PID correction value is 100%.  Turn heater on.');
+        } else if (heater1correction < pidMaxPower*0.03) { // PID update value is below 3% of max power value, turn power off
+          // Update the current temperature field in the UI. 
+          let displayTemp = (targetSensor1.units==='C'?cToF(parseFloat(targetSensor1.value)):parseInt(targetSensor1.value)).toFixed(1);
+          uiController.updateHeaterCurrentTemp(1, displayTemp);
+          // uiController.setHeaterIndicator( 1, 'on');  //  Turn indicator on
+          setHeaterState(1, false);  // Turn Heater on.   
+        } else {  // PID update value is between 3% and full max power, modulate power.  
+          // console.log('heaterController: PID calculated for heater 1 and less than 100%.  Turning heater 1 off and scheduling function to turn it on: ', heater1correction);
+          setHeaterState(1, false);     // Turn heater 1 off
+          // uiController.setHeaterIndicator( 1, 'off');  //  Turn indicator off
+          // Setup delayed function to turn it on
+          setTimeout(function(heater1correction) {    //  Delay using the PID algorithm output.  
+            // console.log('heaterController: Heater 1 scheduled function starting.  Turning heater on.');
+            // uiController.setHeaterIndicator( 1, 'on');  //  Turn indicator on
+            setHeaterState(1, true);  // Turn Heater on.   
             // Update the current temperature field in the UI. 
             let displayTemp = (targetSensor1.units==='C'?cToF(parseFloat(targetSensor1.value)):parseInt(targetSensor1.value)).toFixed(1);
             uiController.updateHeaterCurrentTemp(1, displayTemp);
-            // uiController.setHeaterIndicator( 1, 'on');  //  Turn indicator on
-            setHeaterState(1, true);  // Turn Heater on.   
-
-            // console.log('heaterController: Heater 1 PID correction value is 100%.  Turn heater on.');
-          };
+          }, (1 - (heater1correction/pidMaxPower)) * heaterInterval * 1000);  
         }
       }
     } else {                                           //  Constant power mode
@@ -224,7 +220,7 @@ var heaterController = (function () {
         if (sensorsAvailable2) {  // No sensor reports have come in yet.  
           // console.log('heaterController: Sensors available for heater 2.  Calculating PID correction value.');
           heater2correction = pids[1].calculate(parseFloat(targetSensor2Temp));  // Calculate the PID correction value.    
-          console.log('heaterController: Heater 2 PID correction value = ', heater2correction);
+          // console.log('heaterController: Heater 2 PID correction value = ', heater2correction);
   // ***********  Comment the following line out for production!
           // heater2correction = 33;  // Used for testing in development.  
         } else {
@@ -242,40 +238,36 @@ var heaterController = (function () {
           currLimitSensorValue2 = limitSensor2.units==='C'?cToF(limitSensor2.value):parseFloat(limitSensor2.value);
           LimitValue2 = parseFloat(global.configProxy.heaters[1].pidParameters.limitValue);
 
-          // console.log('Lim sensor 2: ', currLimitSensorValue2, ', type: ', typeof(currLimitSensorValue2), ', limit 2: ', LimitValue2, ', type: ', typeof(LimitValue2));
-          if (currLimitSensorValue2 > LimitValue2) {   //  If limit exceeded.  
-              // console.log('heaterController: Heater 2 limit (', global.configProxy.heaters[1].pidParameters.limitValue, ') exceeded (', limitSensor2.units==='C'?cToF(limitSensor2.value):limitSensor2.value, ').  Turning off heater.');
-            // turn off heaters, update current value
-            setHeaterState(2, false);     
-            // uiController.setHeaterIndicator( 2, 'off');  //  Turn indicator off
+          console.log('heaterController: PID calculated for heater 2: ', heater2correction);
+          if (heater2correction >= pidMaxPower) {  // PID update value is at or above the max, turn power on full
             // Update the current temperature field in the UI. 
             let displayTemp = (targetSensor2.units==='C'?cToF(parseFloat(targetSensor2.value)):parseInt(targetSensor2.value)).toFixed(1);
             uiController.updateHeaterCurrentTemp(2, displayTemp);
-          } else { // Sensors available and limit not exceeded
-            // console.log('heaterController: Sensors for heater 2 available and limit not exceeded(Limit = ', LimitValue2, ', current limit temp = ', currLimitSensorValue2, ').  Proceeding.');
-            if ((heater2correction < pidMaxPower) && (heater2correction > pidMaxPower*0.03)) {  // PID update value is NOT 100
-              // console.log('heaterController: PID calculated for heater 2 and less than 100%.  Turning heater 2 on and scheduling function to turn it off: ', heater2correction);
-              setHeaterState(2, true);     // Turn heater 2 on
-              // uiController.setHeaterIndicator(2, 'on');  //  Turn indicator on
-              // Setup delayed function to turn it off
-              setTimeout(function(heater2correction) {    //  Delay using the PID algorithm output.  
-                // console.log('heaterController: Heater 2 scheduled function starting.  Turning heater off.');
-                // uiController.setHeaterIndicator( 2, 'off');  //  Turn indicator off
-                setHeaterState(2, false);  // Turn Heater off.   
-                // Update the current temperature field in the UI. 
-                let displayTemp = (targetSensor2.units==='C'?cToF(parseFloat(targetSensor2.value)):parseInt(targetSensor2.value)).toFixed(1);
-                uiController.updateHeaterCurrentTemp(2, displayTemp);
-              }, (1 - (heater2correction/pidMaxPower)) * heaterInterval * 1000);  
-            } else {
-              // console.log('heaterController: Heater 2 PID correction value is 100%.  Turn heater on and do nothing.');
-              setHeaterState(2, true);     
-              // uiController.setHeaterIndicator( 2, 'on');  //  Turn indicator on  
+            // uiController.setHeaterIndicator( 2, 'on');  //  Turn indicator on
+            setHeaterState(2, true);  // Turn Heater on.   
+  
+            // console.log('heaterController: Heater 2 PID correction value is 100%.  Turn heater on.');
+          } else if (heater2correction < pidMaxPower*0.03) { // PID update value is below 3% of max power value, turn power off
+            // Update the current temperature field in the UI. 
+            let displayTemp = (targetSensor2.units==='C'?cToF(parseFloat(targetSensor2.value)):parseInt(targetSensor2.value)).toFixed(1);
+            uiController.updateHeaterCurrentTemp(2, displayTemp);
+            // uiController.setHeaterIndicator( 2, 'on');  //  Turn indicator on
+            setHeaterState(2, false);  // Turn Heater on.   
+          } else {  // PID update value is between 3% and full max power, modulate power.  
+            // console.log('heaterController: PID calculated for heater 2 and less than 100%.  Turning heater 2 off and scheduling function to turn it on: ', heater2correction);
+            setHeaterState(2, false);     // Turn heater 2 off
+            // uiController.setHeaterIndicator( 2, 'off');  //  Turn indicator off
+            // Setup delayed function to turn it on
+            setTimeout(function(heater2correction) {    //  Delay using the PID algorithm output.  
+              // console.log('heaterController: Heater 2 scheduled function starting.  Turning heater on.');
+              // uiController.setHeaterIndicator( 2, 'on');  //  Turn indicator on
+              setHeaterState(2, true);  // Turn Heater on.   
               // Update the current temperature field in the UI. 
               let displayTemp = (targetSensor2.units==='C'?cToF(parseFloat(targetSensor2.value)):parseInt(targetSensor2.value)).toFixed(1);
               uiController.updateHeaterCurrentTemp(2, displayTemp);
-            };
+            }, (1 - (heater2correction/pidMaxPower)) * heaterInterval * 1000);  
           }
-        }  
+          }  
       } else {                      // Constant power mode. 
         // console.log('heaterController: Heater 2 outputPower: ', typeof(global.configProxy.heaters[1].powerParameters.outputPower))
         if (parseFloat(global.configProxy.heaters[1].powerParameters.outputPower) === 100.0) {  //If constant power is set to 100%, avoid flicker and set indicator (in case first time through) and heater and return.  
